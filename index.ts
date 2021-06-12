@@ -1,5 +1,6 @@
 import express from 'express';
 import { createServer } from 'http'
+import dotenv from 'dotenv'
 import { Server, Socket } from "socket.io";
 
 //  started to create this file following https://blog.logrocket.com/typescript-with-node-js-and-express/
@@ -16,9 +17,10 @@ interface StatusMessage {
 const app = express();
 const httpServer = createServer(app)
 
+dotenv.config()
 const options = { cors: {
   //  only allow specific clients to connect
-  origin: 'http://localhost:3000'
+  origin: (process.env.CLIENT_URLS || "").split(' ')
 }}
 
 const io = new Server(httpServer, options)

@@ -32,10 +32,12 @@
     "typescript": "strong typing for javascript"
   },
   "dependencies": {
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "socket.io": "^4.1.2"
   },
   "dependenciesComments": {
+    "dotenv": "allows us to read from environment variables",
     "express": "nodejs server",
     "socket.io": "a web socket library for nodejs"
   }
