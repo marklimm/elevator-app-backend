@@ -4,8 +4,16 @@ import { Server, Socket } from "socket.io";
 
 //  started to create this file following https://blog.logrocket.com/typescript-with-node-js-and-express/
 
-const app = express();
 
+/**
+ * A message that is sent between client and server via socketio
+ */
+interface StatusMessage {
+  text: string
+}
+
+
+const app = express();
 const httpServer = createServer(app)
 
 const options = { cors: {
@@ -13,35 +21,52 @@ const options = { cors: {
   origin: 'http://localhost:3000'
 }}
 
-const socketIO = new Server(httpServer, options)
+const io = new Server(httpServer, options)
 
 const PORT = process.env.PORT || 8000;
 
 //  a regular API route
 app.get('/', (req,res) => res.send(`Express + TypeScript Server is awesome!!! - ${new Date()}`));
 
+/**
+ * The number of currently connected clients
+ */
+let numClients = 0
 
-socketIO.on("connection", (socket: Socket) => {
+io.on("connection", (socket: Socket) => {
   //  this executes whenever a client connects
 
   console.log('a user connected')
+  console.log(`There are now ${++numClients} client(s) connected`)
 
-  //  when a connection is made, emit back to that connection
-  socket.emit('connectionAck', {
-    message: 'thanks!  connection received!'
-  })
+  //  when a connection is made, acknowledge that connection --> is this necessary?
+  // socket.emit('connectionAck', {
+  //   message: `thanks for connecting at ${new Date()}!`
+  // })
 
-  socket.on('clientMessage', (data) => {
-    console.log('data from client: ', data)
+  
+  socket.on('client-message', (message: StatusMessage) => {
+    console.log('message from client: ', message)
+
+    const modifiedMessage: StatusMessage = {
+      text: `Sent from a client: ${message.text}`
+    }
+
+    //  send status update to all clients
+    io.emit("status-update", modifiedMessage);
+
+    //  send status update to all clients except the one that sent this message
+    // socket.broadcast.emit("status-update", modifiedMessage);    
   })
 
   socket.on('disconnect', function () {
     //  this executes whenever a client disconnects
 
-    console.log('a user disconnected');
+    numClients--
+    console.log('a user has disconnected');
  });
 })
 
 httpServer.listen(PORT, () => {
-  console.log(`⚡️ server listening on *:${PORT}`)
+  console.log(`server listening on *:${PORT}`)
 })
