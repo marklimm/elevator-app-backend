@@ -1,20 +1,17 @@
-import express from 'express';
+import express, { Application, Request, Response } from 'express';
 import { createServer } from 'http'
 import dotenv from 'dotenv'
 import { Server, Socket } from "socket.io";
 
+import { BuildingState, Elevator, ElevatorDirective, StatusMessage } from './lib/Elevator'
+import { getGameLoop } from './lib/GameLoop';
+
+
 //  started to create this file following https://blog.logrocket.com/typescript-with-node-js-and-express/
 
 
-/**
- * A message that is sent between client and server via socketio
- */
-interface StatusMessage {
-  text: string
-}
 
-
-const app = express();
+const app: Application = express();
 const httpServer = createServer(app)
 
 dotenv.config()
@@ -28,37 +25,39 @@ const io = new Server(httpServer, options)
 const PORT = process.env.PORT || 8000;
 
 //  a regular API route
-app.get('/', (req,res) => res.send(`Express + TypeScript Server is awesome!!! - ${new Date()}`));
+app.get('/', (req: Request, res: Response) => res.send(`Express + TypeScript Server is awesome!!! - ${new Date()}`));
 
 /**
  * The number of currently connected clients
  */
 let numClients = 0
 
+
+
+
+let theInterval: NodeJS.Timeout
+let theIntervalIsRunning = false
+
 io.on("connection", (socket: Socket) => {
   //  this executes whenever a client connects
 
   console.log('a user connected')
-  console.log(`There are now ${++numClients} client(s) connected`)
 
-  //  when a connection is made, acknowledge that connection --> is this necessary?
-  // socket.emit('connectionAck', {
-  //   message: `thanks for connecting at ${new Date()}!`
-  // })
+  numClients += 1
+  console.log(`There are now ${numClients} client(s) connected`)
 
-  
-  socket.on('client-message', (message: StatusMessage) => {
-    console.log('message from client: ', message)
+  if (!theIntervalIsRunning) {
+    theIntervalIsRunning = true
 
-    const modifiedMessage: StatusMessage = {
-      text: `Sent from a client: ${message.text}`
-    }
+    const gameLoopFunction = getGameLoop(io)
 
-    //  send status update to all clients
-    io.emit("status-update", modifiedMessage);
+    theInterval = setInterval(gameLoopFunction, 4000)
+  }
 
-    //  send status update to all clients except the one that sent this message
-    // socket.broadcast.emit("status-update", modifiedMessage);    
+
+  //  when a connection is made, send back the current state of the elevators
+  socket.emit('newConnectionAck', {
+    message: 'Thanks for connecting!  You will soon receive updates on the current buliding status',
   })
 
   socket.on('disconnect', function () {
@@ -66,6 +65,13 @@ io.on("connection", (socket: Socket) => {
 
     numClients--
     console.log('a user has disconnected');
+
+    if (numClients <= 0) {
+      //  stop the interval since no more clients are connected
+
+      clearInterval(theInterval)
+      theIntervalIsRunning = false
+    }
  });
 })
 
