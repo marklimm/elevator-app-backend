@@ -9,13 +9,13 @@
     "eslint": "./node_modules/.bin/eslint \"*/**/*.{js,ts,tsx}\" --fix",
     "lint": "npm run eslint",
     "start": "npm run build && node ./build/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "scriptsComments": {
     "build": "build a javascript version of the typescript express server",
     "dev": "run nodemon against index.ts during local development",
     "start": "build the javascript version of the express server then run it",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "run unit tests"
   },
   "author": "",
   "license": "ISC",
@@ -24,12 +24,15 @@
     "@types/node": "^15.12.2",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
+    "babel-jest": "^27.0.2",
     "eslint": "^7.29.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
+    "jest": "^27.0.4",
     "nodemon": "^2.0.7",
+    "ts-jest": "^27.0.3",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.2"
   },
@@ -38,12 +41,15 @@
     "@types/node": "node types",
     "@typescript-eslint/eslint-plugin": "allows eslint to parse typescript files",
     "@typescript-eslint/parser": "allows eslint to parse typescript files",
+    "babel-jest": "I believe this allows us to use import/export in our unit test files",
     "eslint": "code linting",
     "eslint-config-standard": "standard js linting rules",
     "eslint-plugin-import": "this is a dependency for eslint-config-standard",
     "eslint-plugin-node": "this is a dependency for eslint-config-standard",
     "eslint-plugin-promise": "this is a dependency for eslint-config-standard",
+    "jest": "unit test runner",
     "nodemon": "for nodejs local dev",
+    "ts-jest": "allows us to write our unit tests with typescript",
     "ts-node": "allows nodejs to run typescript files",
     "typescript": "strong typing for javascript"
   },
