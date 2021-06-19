@@ -32,12 +32,16 @@ export class Building {
     return this.numPeople
   }
 
-  addPeople (toAdd = 0) : void {
-    this.numPeople += toAdd
+  async addPeople (toAdd = 0) : Promise<void> {
+    await lock.acquire(NUM_PEOPLE_LOCK, () => {
+      this.numPeople += toAdd
+    })
   }
 
-  removePeople (toRemove = 0) : void {
-    this.numPeople -= toRemove
+  async removePeople (toRemove = 0) : Promise<void> {
+    await lock.acquire(NUM_PEOPLE_LOCK, () => {
+      this.numPeople -= toRemove
+    })
   }
 }
 
