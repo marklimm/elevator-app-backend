@@ -2,7 +2,8 @@ import express, { Application, Request, Response } from 'express'
 import { createServer } from 'http'
 import dotenv from 'dotenv'
 import { Server, Socket } from 'socket.io'
-import { onDisconnect, onNewConnection, setSocketListeners } from './lib/GameLoopManager'
+import { onDisconnect, onNewConnection } from './lib/GameLoopManager'
+import { setClientListeners } from './lib/ClientActions'
 
 //  started to create this file following https://blog.logrocket.com/typescript-with-node-js-and-express/
 
@@ -31,7 +32,7 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('disconnect', onDisconnect)
 
-  setSocketListeners(socket)
+  setClientListeners(socket)
 })
 
 httpServer.listen(PORT, () => {

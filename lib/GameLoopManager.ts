@@ -43,11 +43,3 @@ export const onDisconnect = () : void => {
     gameLoopIsRunning = false
   }
 }
-
-/**
-  * This function defines listeners for the real-time messages sent by the clients
-  * @param socket
-  */
-export const setSocketListeners = (socket: Socket) : void => {
-
-}

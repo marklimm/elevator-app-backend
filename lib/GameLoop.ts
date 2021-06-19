@@ -1,7 +1,18 @@
 import { Server } from 'socket.io'
-import { getNumberOfPeopleInBuilding } from './Randomizer'
 
-let numPeopleInBuilding = 0
+import { getChangeByAmount } from './Randomizer'
+
+interface IBuildingState {
+  /**
+   * This value will fluctuate with every run of the game loop
+   */
+  numPeopleInBuilding: number
+}
+
+const buildingState: IBuildingState = {
+
+  numPeopleInBuilding: 500
+}
 
 export const getGameLoop = (io: Server) => {
   return () : void => {
@@ -9,7 +20,8 @@ export const getGameLoop = (io: Server) => {
 
     console.log(`-- loop is executing at ${new Date()}`)
 
-    numPeopleInBuilding = getNumberOfPeopleInBuilding()
+    numPeopleInBuilding += getChangeByAmount()
+
     console.log(`there are currently ${numPeopleInBuilding} people in the building`)
 
     const newStatusMessage = {

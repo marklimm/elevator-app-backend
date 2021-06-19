@@ -1,10 +1,10 @@
-import { getNumberOfPeopleInBuilding } from './Randomizer'
+import { getChangeByAmount } from './Randomizer'
 
-test('the number of people in the building falls within the expected range', () => {
-  const numberOfPeople = getNumberOfPeopleInBuilding()
+it('the change by amount falls within the expected range', () => {
+  const numberOfPeople = getChangeByAmount()
 
-  const min = 495
-  const max = 505
+  const min = -5
+  const max = 5
 
   expect(numberOfPeople).toBeGreaterThanOrEqual(min)
   expect(numberOfPeople).toBeLessThanOrEqual(max)
