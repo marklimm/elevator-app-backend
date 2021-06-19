@@ -1,6 +1,9 @@
 import { Server, Socket } from 'socket.io'
+import { NewConnectionBuildingResponse, OkOrError } from './payloads/Building'
+
 import { setClientActionListeners } from './ClientActions'
 import { fluctuatingNumPeopleLoop, getMainLoop } from './GameLoops'
+import { building } from './Building'
 
 /**
  * The number of currently connected clients
@@ -32,10 +35,18 @@ export const onNewConnection = (io: Server, socket: Socket) : void => {
   numClients += 1
   console.log(`New user connected - there are now ${numClients} client(s) connected`)
 
+  const staticStats = building.getStaticStats()
+  const numPeople = building.getNumPeople()
+
+  const newConnectionResponse: NewConnectionBuildingResponse = {
+    ...staticStats,
+    numPeople,
+    status: OkOrError.Ok,
+    message: 'Successfully connected!'
+  }
+
   //  when a connection is made, send back the current state of the elevators
-  socket.emit('newConnectionAck', {
-    message: 'Thanks for connecting!  You will soon receive updates on the current buliding status'
-  })
+  socket.emit('newConnectionAck', newConnectionResponse)
 }
 
 export const onDisconnect = () : void => {

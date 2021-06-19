@@ -4,6 +4,7 @@
 import { Socket } from 'socket.io'
 
 import { building } from './Building'
+import { NumPeopleUpdatedResponse, OkOrError } from './payloads/Building'
 
 /**
   * This function defines listeners for the real-time messages sent by the clients
@@ -13,16 +14,22 @@ export const setClientActionListeners = (socket: Socket) : void => {
   socket.on('increase-people', (increaseBy, callback) => {
     building.addPeople(increaseBy)
 
-    callback({
-      status: 'completed'
-    })
+    const numPeopleUpdatedResponse: NumPeopleUpdatedResponse = {
+      numPeople: building.getNumPeople(),
+      status: OkOrError.Ok
+    }
+
+    callback(numPeopleUpdatedResponse)
   })
 
   socket.on('decrease-people', (decreaseBy, callback) => {
     building.removePeople(decreaseBy)
 
-    callback({
-      status: 'completed'
-    })
+    const numPeopleUpdatedResponse: NumPeopleUpdatedResponse = {
+      numPeople: building.getNumPeople(),
+      status: OkOrError.Ok
+    }
+
+    callback(numPeopleUpdatedResponse)
   })
 }
