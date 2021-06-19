@@ -3,6 +3,7 @@ import { createServer } from 'http'
 import dotenv from 'dotenv'
 import { Server, Socket } from 'socket.io'
 import { setConnectionListeners } from './lib/ClientManager'
+import { GameLoops } from './lib/GameLoops'
 
 //  started to create this file following https://blog.logrocket.com/typescript-with-node-js-and-express/
 
@@ -24,10 +25,13 @@ const PORT = process.env.PORT || 8000
 //  a regular API route
 app.get('/', (req: Request, res: Response) => res.send(`Express + TypeScript Server is awesome!!! - ${new Date()}`))
 
+//  initialize the game loops but don't start them yet
+const gameLoops = new GameLoops(io)
+
 io.on('connection', (socket: Socket) => {
   //  this executes whenever a client connects
 
-  setConnectionListeners(io, socket)
+  setConnectionListeners(gameLoops, socket)
 })
 
 httpServer.listen(PORT, () => {

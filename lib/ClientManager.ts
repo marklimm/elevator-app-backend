@@ -1,8 +1,8 @@
-import { Server, Socket } from 'socket.io'
-import { NewConnectionBuildingResponse, OkOrError } from './payloads/Building'
+import { Socket } from 'socket.io'
+import { NewConnectionBuildingResponse, OkOrError } from './BuildingActions'
 
-import { setClientActionListeners } from './ClientActions'
-import { fluctuatingNumPeopleLoop, getMainLoop } from './GameLoops'
+import { setClientActionListeners } from './BuildingActionListeners'
+import { GameLoops } from './GameLoops'
 import { building } from './Building'
 
 /**
@@ -10,26 +10,10 @@ import { building } from './Building'
  */
 let numClients = 0
 
-let gameLoopsAreRunning = false
-
-/**
- * Contains the ids for all of the currently running game loops
- */
-const intervalsArr: NodeJS.Timeout[] = []
-
-const startGameLoops = (io: Server) => {
-  //  fluctating number of people in the building
-  intervalsArr.push(setInterval(fluctuatingNumPeopleLoop, 5000))
-
-  //  "main" loop ... wondering if this will end up changing
-  intervalsArr.push(setInterval(getMainLoop(io), 4000))
-}
-
-export const onNewConnection = (io: Server, socket: Socket) : void => {
-  if (!gameLoopsAreRunning) {
-    gameLoopsAreRunning = true
-
-    startGameLoops(io)
+export const onNewConnection = (gameLoops: GameLoops, socket: Socket) : void => {
+  if (!gameLoops.areRunning()) {
+    //  the first client to connect will start the game loops
+    gameLoops.startGameLoops()
   }
 
   numClients += 1
@@ -49,7 +33,7 @@ export const onNewConnection = (io: Server, socket: Socket) : void => {
   socket.emit('newConnectionAck', newConnectionResponse)
 }
 
-export const onDisconnect = () : void => {
+export const onDisconnect = (gameLoops: GameLoops) : void => {
   //  this executes whenever a client disconnects
 
   numClients--
@@ -58,17 +42,14 @@ export const onDisconnect = () : void => {
   if (numClients <= 0) {
     //  stop all the intervals/game loops since no more clients are connected
 
-    //  clear all of the intervals/game loops
-    intervalsArr.forEach(interval => clearInterval(interval))
-
-    gameLoopsAreRunning = false
+    gameLoops.stopGameLoops()
   }
 }
 
-export const setConnectionListeners = (io: Server, socket: Socket) : void => {
-  onNewConnection(io, socket)
+export const setConnectionListeners = (gameLoops: GameLoops, socket: Socket) : void => {
+  onNewConnection(gameLoops, socket)
 
-  socket.on('disconnect', onDisconnect)
+  socket.on('disconnect', onDisconnect.bind(this, gameLoops))
 
   setClientActionListeners(socket)
 }
