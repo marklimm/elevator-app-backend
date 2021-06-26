@@ -76,7 +76,8 @@ export enum ElevatorStatus {
   DOORS_OPENING = 'doors-opening',
   INACTIVE = 'inactive',
   MOVING = 'moving',
-  READY = 'ready'
+  READY = 'ready',
+  USERS_ENTERING = 'users-entering',
 }
 
 export interface Elevator {
@@ -87,6 +88,16 @@ export interface Elevator {
   status: ElevatorStatus,
   direction: Direction
 }
+
+export interface Elevators {
+  [key: string]: Elevator
+}
+
+export interface ElevatorResponse {
+  elevator: Elevator
+}
+
+export type ElevatorStatusUpdate = ResponseStatus & ElevatorResponse
 
 // /**
 //  * The response sent after a user has requested that the elevator go to a destination floor

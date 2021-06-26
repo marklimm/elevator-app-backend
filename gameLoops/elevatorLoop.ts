@@ -1,33 +1,36 @@
-import { Direction, Elevator, ElevatorStatus } from '../lib/BuildingActions'
-import { broadcastUserStatusUpdate } from '../state/Broadcaster'
-import { usersMakeElevatorRequests } from '../state/People'
+import { Elevator, ElevatorStatus } from '../lib/BuildingActions'
+import { broadcastElevatorStatusUpdate } from '../state/Broadcaster'
+import { elevatorMoves, elevatorOpensDoors, elevators } from '../state/Elevators'
 
-export const elevatorLoop = async (elevator: Elevator) : Promise<void> => {
-  console.log(`elevator loop - ${new Date()}`)
+export const elevatorLoop = async ({ name }: Elevator) : Promise<void> => {
   const cantOpenDoorsStatuses = [ElevatorStatus.INACTIVE, ElevatorStatus.DOORS_CLOSING, ElevatorStatus.DOORS_OPENING]
 
+  const elevator = elevators[name]
+  // console.log(`elevator loop for ${elevator.name}`)
+
   //  exit this function if the elevator shouldn't open its doors
-  if (cantOpenDoorsStatuses.indexOf(elevator.status) > -1) { return }
+  if (cantOpenDoorsStatuses.indexOf(elevator.status) > -1) {
+    // console.log('exiting because elevator.status', elevator.status)
+    return
+  }
 
   if (elevator.status === ElevatorStatus.MOVING && elevator.currFloor === elevator.destFloor) {
-    //  should open doors I'm thinking
+    //  elevator has reached its destination, open the doors
 
-    elevator.status = ElevatorStatus.DOORS_OPENING
+    console.log('opening doors')
+    await elevatorOpensDoors(elevator)
+
+    broadcastElevatorStatusUpdate(elevator)
 
     return
   }
 
   if (elevator.status === ElevatorStatus.MOVING) {
-    elevator.direction === Direction.GOING_UP ? elevator.currFloor += 1 : elevator.currFloor -= 1
+    await elevatorMoves(elevator)
+
+    console.log(`elevator has moved - ${new Date()}`)
+    broadcastElevatorStatusUpdate(elevator)
   }
 
-  // const usersWhoJustMadeAnElevatorRequest = await usersMakeElevatorRequests()
-
-  // if (usersWhoJustMadeAnElevatorRequest.length > 0) {
-  //   //  broadcast that at least one person has just made an elevator request
-
-  //   console.log('usersWhoJustMadeAnElevatorRequest', usersWhoJustMadeAnElevatorRequest)
-
-  //   broadcastUserStatusUpdate(usersWhoJustMadeAnElevatorRequest)
-  // }
+  //  the ElevatorStatus.READY status is handled by the elevatorManagerLoop
 }

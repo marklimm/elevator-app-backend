@@ -3,6 +3,7 @@ import { NewConnectionBuildingResponse, OkOrError } from './BuildingActions'
 
 import { gameLoopManager } from '../state/GameLoops'
 import { buildingDetails } from '../state/Building'
+import { resetElevators } from '../state/Elevators'
 import { resetUsers } from '../state/People'
 
 /**
@@ -41,6 +42,8 @@ export const onDisconnect = () : void => {
     gameLoopManager.stop()
 
     resetUsers()
+
+    resetElevators()
   }
 }
 

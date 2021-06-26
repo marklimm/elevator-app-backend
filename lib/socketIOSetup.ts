@@ -7,7 +7,7 @@ import { setClientActionListeners } from './BuildingActionListeners'
 
 import { initializeBroadcaster } from '../state/Broadcaster'
 import { initializeGameLoops } from '../state/GameLoops'
-import { initElevators } from '../state/Elevators'
+import { resetElevators } from '../state/Elevators'
 
 export const initSocketIO = (httpServer: Server) : void => {
   //  allows us to read environment variables
@@ -22,7 +22,7 @@ export const initSocketIO = (httpServer: Server) : void => {
 
   const io = new SocketIOServer(httpServer, options)
 
-  initElevators()
+  resetElevators()
   initializeGameLoops(io)
   initializeBroadcaster(io)
 

@@ -1,5 +1,5 @@
 import { Server } from 'socket.io'
-import { OkOrError, StatusUpdateResponse, User } from '../lib/BuildingActions'
+import { Elevator, ElevatorStatusUpdate, OkOrError, StatusUpdateResponse, User } from '../lib/BuildingActions'
 
 let _io: Server
 
@@ -19,4 +19,14 @@ export const broadcastUserStatusUpdate = (usersArr: User[]) : void => {
 
   //  broadcast a status update to all clients
   _io.emit('status-update', statusUpdateResponse)
+}
+
+export const broadcastElevatorStatusUpdate = (elevator: Elevator) : void => {
+  const elevatorStatusUpdate: ElevatorStatusUpdate = {
+    elevator,
+    status: OkOrError.Ok
+  }
+
+  //  broadcast the elevator status change to all clients
+  _io.emit('elevator-update', elevatorStatusUpdate)
 }
