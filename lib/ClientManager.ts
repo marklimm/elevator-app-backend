@@ -1,7 +1,7 @@
 import { Socket } from 'socket.io'
 import { NewConnectionBuildingResponse, OkOrError } from './BuildingActions'
 
-import { gameLoops } from '../state/GameLoops'
+import { gameLoopManager } from '../state/GameLoops'
 import { buildingDetails } from '../state/Building'
 import { getNumPeople, getUsersStatus } from '../state/People'
 
@@ -11,9 +11,9 @@ import { getNumPeople, getUsersStatus } from '../state/People'
 let numClients = 0
 
 export const onNewConnection = (socket: Socket) : void => {
-  if (!gameLoops.areRunning) {
+  if (!gameLoopManager.areRunning) {
     //  the first client to connect will start the game loops
-    gameLoops.start()
+    gameLoopManager.start()
   }
 
   numClients += 1
@@ -43,7 +43,7 @@ export const onDisconnect = () : void => {
   if (numClients <= 0) {
     //  stop all the intervals/game loops since no more clients are connected
 
-    gameLoops.stop()
+    gameLoopManager.stop()
   }
 }
 
