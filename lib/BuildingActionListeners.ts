@@ -3,30 +3,32 @@
 
 import { Socket } from 'socket.io'
 
-import { DECREASE_PEOPLE, ElevatorRequestResponse, INCREASE_PEOPLE, NumPeopleUpdatedResponse, OkOrError, REQUEST_ELEVATOR } from './BuildingActions'
-import { addElevatorRequest, addPeople, numPeople, removePeople } from './BuildingState'
+import { DECREASE_PEOPLE, INCREASE_PEOPLE, OkOrError, StatusUpdateResponse } from './BuildingActions'
+import { addPeople, getNumPeople, removePeople } from '../state/People'
 
 /**
   * This function defines listeners for the real-time messages sent by the clients
   * @param socket
   */
 export const setClientActionListeners = (socket: Socket) : void => {
-  socket.on(REQUEST_ELEVATOR, (destFloor, callback) => {
-    addElevatorRequest({ destFloor })
+  // socket.on(REQUEST_ELEVATOR, (destFloor, callback) => {
+  //   addElevatorRequest({ destFloor })
 
-    const elevatorRequestResponse: ElevatorRequestResponse = {
-      destFloor,
-      status: OkOrError.Ok,
-      message: `We have received your request to go to floor ${destFloor}.  An elevator will be with you shortly!`
-    }
+  //   const elevatorRequestResponse: ElevatorRequestResponse = {
+  //     destFloor,
+  //     status: OkOrError.Ok,
+  //     message: `We have received your request to go to floor ${destFloor}.  An elevator will be with you shortly!`
+  //   }
 
-    callback(elevatorRequestResponse)
-  })
+  //   callback(elevatorRequestResponse)
+  // })
 
   socket.on(INCREASE_PEOPLE, (increaseBy, callback) => {
     addPeople(increaseBy)
 
-    const numPeopleUpdatedResponse: NumPeopleUpdatedResponse = {
+    const numPeople = getNumPeople()
+
+    const numPeopleUpdatedResponse: StatusUpdateResponse = {
       numPeople,
       status: OkOrError.Ok,
       message: `There are now ${numPeople} in the building`
@@ -38,7 +40,9 @@ export const setClientActionListeners = (socket: Socket) : void => {
   socket.on(DECREASE_PEOPLE, (decreaseBy, callback) => {
     removePeople(decreaseBy)
 
-    const numPeopleUpdatedResponse: NumPeopleUpdatedResponse = {
+    const numPeople = getNumPeople()
+
+    const numPeopleUpdatedResponse: StatusUpdateResponse = {
       numPeople,
       status: OkOrError.Ok,
       message: `There are now ${numPeople} in the building`

@@ -15,8 +15,19 @@ export interface BuildingDetails {
   yearBuilt: number
 }
 
+export interface UserStatus {
+  name: string,
+  currFloor: number
+  destFloor: number
+}
+
+export interface UsersStatus {
+  [key: string]: UserStatus
+}
+
 export interface BuildingStatus {
-  numPeople: number
+  numPeople: number,
+  usersStatus?: UsersStatus
 }
 
 export enum OkOrError {
@@ -37,27 +48,24 @@ export type NewConnectionBuildingResponse = BuildingDetails &
   BuildingStatus &
   ResponseStatus
 
-/**
- * This response is sent after the client has removed/added people to the building
- */
-export type NumPeopleUpdatedResponse = BuildingStatus & ResponseStatus
+export type StatusUpdateResponse = BuildingStatus & ResponseStatus
 
-/**
- * The request object for when the user requests that the elevator go to a destination floor
- */
-export interface ElevatorRequest {
-  destFloor: number
-}
+// /**
+//  * The request object for when the user requests that the elevator go to a destination floor
+//  */
+// export interface ElevatorRequest {
+//   destFloor: number
+// }
 
-/**
- * The response sent after a user has requested that the elevator go to a destination floor
- */
-export type ElevatorRequestResponse = ResponseStatus & ElevatorRequest
+// /**
+//  * The response sent after a user has requested that the elevator go to a destination floor
+//  */
+// export type ElevatorRequestResponse = ResponseStatus & ElevatorRequest
 
-export interface ElevatorTakingRequest {
-  elevatorName: string
-  destFloor: number
-}
+// export interface ElevatorTakingRequest {
+//   elevatorName: string
+//   destFloor: number
+// }
 
-export type ElevatorTakingRequestResponse = ResponseStatus &
-  ElevatorTakingRequest
+// export type ElevatorTakingRequestResponse = ResponseStatus &
+//   ElevatorTakingRequest
