@@ -2,7 +2,7 @@ import { Server } from 'http'
 import { Server as SocketIOServer, Socket } from 'socket.io'
 import dotenv from 'dotenv'
 
-import { setConnectionListeners } from './ClientManager'
+import { setConnectionListeners } from './ConnectionManager'
 import { setClientActionListeners } from './BuildingActionListeners'
 
 import { initializeBroadcaster } from '../state/Broadcaster'
