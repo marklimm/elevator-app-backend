@@ -15,19 +15,27 @@ export interface BuildingDetails {
   yearBuilt: number
 }
 
-export interface UserStatus {
+export enum UserStatus {
+  NEWLY_SPAWNED = 'newly-spawned',
+  WAITING_ON_ELEVATOR = 'waiting-on-elevator',
+  IN_ELEVATOR = 'in-elevator',
+  AT_DESTINATION = 'at-destination'
+}
+
+export interface User {
   name: string,
   currFloor: number
   destFloor: number
+  status: UserStatus
 }
 
-export interface UsersStatus {
-  [key: string]: UserStatus
+export interface Users {
+  [key: string]: User
 }
 
 export interface BuildingStatus {
   numPeople: number,
-  usersStatus?: UsersStatus
+  users?: Users
 }
 
 export enum OkOrError {
@@ -53,9 +61,9 @@ export type StatusUpdateResponse = BuildingStatus & ResponseStatus
 // /**
 //  * The request object for when the user requests that the elevator go to a destination floor
 //  */
-// export interface ElevatorRequest {
-//   destFloor: number
-// }
+export interface ElevatorRequest {
+  destFloor: number
+}
 
 // /**
 //  * The response sent after a user has requested that the elevator go to a destination floor

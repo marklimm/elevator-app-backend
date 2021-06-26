@@ -9,7 +9,7 @@ import { initializeBroadcaster } from '../state/Broadcaster'
 import { initializeGameLoops } from '../state/GameLoops'
 
 export const initSocketIO = (httpServer: Server) : void => {
-//  allows us to read environment variables
+  //  allows us to read environment variables
   dotenv.config()
 
   const options = {

@@ -1,5 +1,5 @@
 import AsyncLock from 'async-lock'
-
+import { ElevatorRequest } from '../lib/BuildingActions'
 const ELEVATOR_REQUEST_LOCK = 'elevator-request-lock'
 
 const elevatorRequestQueue: ElevatorRequest[] = []
