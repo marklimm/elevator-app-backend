@@ -1,7 +1,5 @@
 import { Server } from 'socket.io'
-import { OkOrError, StatusUpdateResponse } from '../lib/BuildingActions'
-
-import { getNumPeople, getUsers } from '../state/People'
+import { OkOrError, StatusUpdateResponse, User } from '../lib/BuildingActions'
 
 let _io: Server
 
@@ -9,12 +7,10 @@ export const initializeBroadcaster = (io : Server) : void => {
   _io = io
 }
 
-export const broadcastStatusUpdate = () : void => {
-  const numPeople = getNumPeople()
-  const users = getUsers()
+export const broadcastUserStatusUpdate = (usersArr: User[]) : void => {
+  const users = usersArr
 
   const statusUpdateResponse: StatusUpdateResponse = {
-    numPeople,
     users,
     status: OkOrError.Ok
   }

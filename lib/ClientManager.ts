@@ -3,7 +3,7 @@ import { NewConnectionBuildingResponse, OkOrError } from './BuildingActions'
 
 import { gameLoopManager } from '../state/GameLoops'
 import { buildingDetails } from '../state/Building'
-import { getNumPeople, getUsers, resetUsers } from '../state/People'
+import { resetUsers } from '../state/People'
 
 /**
  * The number of currently connected clients
@@ -19,13 +19,8 @@ export const onNewConnection = (socket: Socket) : void => {
   numClients += 1
   console.log(`New user connected - there are now ${numClients} client(s) connected`)
 
-  const numPeople = getNumPeople()
-  const users = getUsers()
-
   const newConnectionResponse: NewConnectionBuildingResponse = {
     ...buildingDetails,
-    numPeople,
-    users,
     status: OkOrError.Ok,
     message: 'Successfully connected!'
   }

@@ -34,8 +34,8 @@ export interface Users {
 }
 
 export interface BuildingStatus {
-  numPeople: number,
-  users?: Users
+  numPeople?: number,
+  users?: User[]
 }
 
 export enum OkOrError {

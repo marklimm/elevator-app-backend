@@ -1,14 +1,15 @@
 
-import { broadcastStatusUpdate } from '../state/Broadcaster'
+import { broadcastUserStatusUpdate } from '../state/Broadcaster'
 import { usersMakeElevatorRequests } from '../state/People'
-// import { UserStatus } from '../lib/BuildingActions'
 
 export const personLoop = async () : Promise<void> => {
-  const userWhoJustMadeRequest = await usersMakeElevatorRequests()
+  const usersWhoJustMadeAnElevatorRequest = await usersMakeElevatorRequests()
 
-  if (userWhoJustMadeRequest) {
-    //  broadcast that someone has just made an elevator request
+  if (usersWhoJustMadeAnElevatorRequest.length > 0) {
+    //  broadcast that at least one person has just made an elevator request
 
-    broadcastStatusUpdate()
+    console.log('usersWhoJustMadeAnElevatorRequest', usersWhoJustMadeAnElevatorRequest)
+
+    broadcastUserStatusUpdate(usersWhoJustMadeAnElevatorRequest)
   }
 }

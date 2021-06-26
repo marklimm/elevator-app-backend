@@ -68,19 +68,23 @@ export const spawnNewUser = async () : Promise<User> => {
   return users[name]
 }
 
-export const usersMakeElevatorRequests = async () : Promise<User | undefined> => {
+const makeElevatorRequests = async (usersMakingElevatorRequests: User[]) => {
+  for (const user of usersMakingElevatorRequests) {
+    console.log(`${user.name} is making a request to go to ${user.destFloor}`)
+    await addElevatorRequest({ destFloor: user.destFloor })
+
+    //  specify that the user is now waiting for the elevator
+    user.status = UserStatus.WAITING_ON_ELEVATOR
+  }
+}
+
+export const usersMakeElevatorRequests = async () : Promise<User[]> => {
   const usersArr: User[] = getUsersAsArray()
 
   //  check if any users are calling the elevator
-  const userWithRequest = usersArr.find(user => user.status === UserStatus.NEWLY_SPAWNED)
+  const usersMakingElevatorRequests = usersArr.filter(user => user.status === UserStatus.NEWLY_SPAWNED)
 
-  if (userWithRequest) {
-    console.log(`${userWithRequest.name} is making a request to go to ${userWithRequest.destFloor}`)
-    await addElevatorRequest({ destFloor: userWithRequest.destFloor })
+  await makeElevatorRequests(usersMakingElevatorRequests)
 
-    //  specify that the user is now waiting for the elevator
-    users[userWithRequest.name].status = UserStatus.WAITING_ON_ELEVATOR
-
-    return users[userWithRequest.name]
-  }
+  return usersMakingElevatorRequests
 }
