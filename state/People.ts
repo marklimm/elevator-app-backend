@@ -1,7 +1,7 @@
 import AsyncLock from 'async-lock'
 import { getRandomFloor, getRandomName } from '../lib/Randomizer'
 import { buildingDetails } from './Building'
-import { User, Users, UserStatus } from '../lib/BuildingActions'
+import { Direction, User, Users, UserStatus } from '../lib/BuildingActions'
 import { addElevatorRequest } from './Elevators'
 
 let numPeople = 500
@@ -71,7 +71,10 @@ export const spawnNewUser = async () : Promise<User> => {
 const makeElevatorRequests = async (usersMakingElevatorRequests: User[]) => {
   for (const user of usersMakingElevatorRequests) {
     console.log(`${user.name} is making a request to go to ${user.destFloor}`)
-    await addElevatorRequest({ destFloor: user.destFloor })
+
+    const direction = user.currFloor < user.destFloor ? Direction.GOING_UP : Direction.GOING_DOWN
+
+    await addElevatorRequest({ fromFloor: user.destFloor, direction })
 
     //  specify that the user is now waiting for the elevator
     user.status = UserStatus.WAITING_ON_ELEVATOR

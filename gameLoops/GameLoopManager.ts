@@ -2,8 +2,10 @@ import { Server as SocketIOServer } from 'socket.io'
 
 // import { statusLoop } from './statusLoop'
 import { fluctuatingNumPeopleLoop } from './fluctuatingNumPeopleLoop'
+import { elevatorLoop } from './elevatorLoop'
 import { spawnNewUserLoop } from './spawnNewUserLoop'
 import { personLoop } from './personLoop'
+import { elevators } from '../state/Elevators'
 
 export class GameLoopManager {
   private _io: SocketIOServer
@@ -38,6 +40,10 @@ export class GameLoopManager {
      this.intervalsArr.push(setInterval(spawnNewUserLoop.bind(this), 2000))
 
      this.intervalsArr.push(setInterval(personLoop.bind(this), 5000))
+
+     elevators.forEach(elevator => {
+       this.intervalsArr.push(setInterval(elevatorLoop.bind(this, elevator), 4000))
+     })
 
      //  reporting on any status changes that were caused by the above loops
      //  this.intervalsArr.push(setInterval(statusLoop.bind(this), 2000))
