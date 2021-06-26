@@ -4,7 +4,7 @@
 import { Socket } from 'socket.io'
 
 import { DECREASE_PEOPLE, ElevatorRequestResponse, INCREASE_PEOPLE, NumPeopleUpdatedResponse, OkOrError, REQUEST_ELEVATOR } from './BuildingActions'
-import { building } from './Building'
+import { addElevatorRequest, addPeople, numPeople, removePeople } from './BuildingState'
 
 /**
   * This function defines listeners for the real-time messages sent by the clients
@@ -12,7 +12,7 @@ import { building } from './Building'
   */
 export const setClientActionListeners = (socket: Socket) : void => {
   socket.on(REQUEST_ELEVATOR, (destFloor, callback) => {
-    building.addElevatorRequest({ destFloor })
+    addElevatorRequest({ destFloor })
 
     const elevatorRequestResponse: ElevatorRequestResponse = {
       destFloor,
@@ -24,24 +24,24 @@ export const setClientActionListeners = (socket: Socket) : void => {
   })
 
   socket.on(INCREASE_PEOPLE, (increaseBy, callback) => {
-    building.addPeople(increaseBy)
+    addPeople(increaseBy)
 
     const numPeopleUpdatedResponse: NumPeopleUpdatedResponse = {
-      numPeople: building.getNumPeople(),
+      numPeople,
       status: OkOrError.Ok,
-      message: `There are now ${building.getNumPeople()} in the building`
+      message: `There are now ${numPeople} in the building`
     }
 
     callback(numPeopleUpdatedResponse)
   })
 
   socket.on(DECREASE_PEOPLE, (decreaseBy, callback) => {
-    building.removePeople(decreaseBy)
+    removePeople(decreaseBy)
 
     const numPeopleUpdatedResponse: NumPeopleUpdatedResponse = {
-      numPeople: building.getNumPeople(),
+      numPeople,
       status: OkOrError.Ok,
-      message: `There are now ${building.getNumPeople()} in the building`
+      message: `There are now ${numPeople} in the building`
     }
 
     callback(numPeopleUpdatedResponse)
