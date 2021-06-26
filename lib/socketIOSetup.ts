@@ -4,7 +4,9 @@ import dotenv from 'dotenv'
 
 import { setConnectionListeners } from './ClientManager'
 import { setClientActionListeners } from './BuildingActionListeners'
-import { initializeGameLoops } from './BuildingState'
+
+import { initializeBroadcaster } from '../state/Broadcaster'
+import { initializeGameLoops } from '../state/GameLoops'
 
 export const initSocketIO = (httpServer: Server) : void => {
 //  allows us to read environment variables
@@ -20,6 +22,7 @@ export const initSocketIO = (httpServer: Server) : void => {
   const io = new SocketIOServer(httpServer, options)
 
   initializeGameLoops(io)
+  initializeBroadcaster(io)
 
   io.on('connection', (socket: Socket) => {
     //  this executes whenever a client connects
