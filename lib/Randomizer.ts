@@ -14,3 +14,21 @@ export const getChangeByAmount = () : number => {
 
   return changedBy
 }
+
+export const getRandomName = () : string => {
+  const names = ['Grant', 'Nikki', 'Paulo', 'Wrex']
+
+  const selectedName = names[Math.floor(Math.random() * names.length)]
+
+  return selectedName
+}
+
+export const getRandomFloor = (numFloors: number, notThisFloor = -1) : number => {
+  let selectedFloor
+
+  while (selectedFloor === undefined || selectedFloor === notThisFloor) {
+    selectedFloor = Math.floor(Math.random() * numFloors) + 1
+  }
+
+  return selectedFloor
+}
