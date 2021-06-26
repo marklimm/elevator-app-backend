@@ -16,7 +16,7 @@ export const getChangeByAmount = () : number => {
 }
 
 export const getRandomName = () : string => {
-  const names = ['Grant', 'Nikki', 'Paulo', 'Wrex']
+  const names = ['Grant', 'Lambert', 'Nikki', 'Paulo', 'Wrex']
 
   const selectedName = names[Math.floor(Math.random() * names.length)]
 
