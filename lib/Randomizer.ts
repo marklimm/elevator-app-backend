@@ -15,10 +15,14 @@ export const getChangeByAmount = () : number => {
   return changedBy
 }
 
-export const getRandomName = () : string => {
-  const names = ['Grant', 'Lambert', 'Nikki', 'Paulo', 'Wrex']
+export const getRandomName = (usedNames: string[]) : string => {
+  const names = ['Cassidy', 'Grant', 'Lambert', 'Mark', 'Nikki', 'Paulo', 'Wrex']
 
-  const selectedName = names[Math.floor(Math.random() * names.length)]
+  //  only choose names that aren't in the `usedNames` list
+  let selectedName = ''
+  do {
+    selectedName = names[Math.floor(Math.random() * names.length)]
+  } while (usedNames.indexOf(selectedName) > -1)
 
   return selectedName
 }
