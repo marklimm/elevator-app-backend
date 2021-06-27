@@ -7,15 +7,13 @@ export const initializeBroadcaster = (io : Server) : void => {
   _io = io
 }
 
-export const broadcastUserStatusUpdate = (usersArr: User[]) : void => {
-  const users = usersArr
-
+export const broadcastUserStatusUpdate = (user: User) : void => {
   const statusUpdateResponse: StatusUpdateResponse = {
-    users,
+    users: [user],
     status: OkOrError.Ok
   }
 
-  console.log(`broadcasting ${users}`)
+  console.log(`broadcasting user status update for ${user}`)
 
   //  broadcast a status update to all clients
   _io.emit('status-update', statusUpdateResponse)

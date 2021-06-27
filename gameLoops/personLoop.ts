@@ -1,15 +1,8 @@
 
-import { broadcastUserStatusUpdate } from '../state/Broadcaster'
-import { usersMakeElevatorRequests } from '../state/People'
+import { processCallingTheElevator } from '../state/People'
 
-export const personLoop = async () : Promise<void> => {
-  const usersWhoJustMadeAnElevatorRequest = await usersMakeElevatorRequests()
+export const personLoop = async (name: string) : Promise<void> => {
+  await processCallingTheElevator(name)
 
-  if (usersWhoJustMadeAnElevatorRequest.length > 0) {
-    //  broadcast that at least one person has just made an elevator request
-
-    console.log('usersWhoJustMadeAnElevatorRequest', usersWhoJustMadeAnElevatorRequest)
-
-    broadcastUserStatusUpdate(usersWhoJustMadeAnElevatorRequest)
-  }
+  // await processGettingOnAndPressingButton()
 }
