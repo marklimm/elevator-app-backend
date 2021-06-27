@@ -8,6 +8,10 @@ export const REQUEST_ELEVATOR = 'request-elevator'
 //  server-initiated actions
 export const ELEVATOR_STATUS = 'elevator-status'
 
+export interface GameLoopIntervals {
+  [key: string]: NodeJS.Timeout
+}
+
 export interface BuildingDetails {
   elevatorNames: string[]
   name: string
@@ -17,7 +21,7 @@ export interface BuildingDetails {
 
 export enum UserStatus {
   NEWLY_SPAWNED = 'newly-spawned',
-  WAITING_ON_ELEVATOR = 'waiting-on-elevator',
+  WAITING_FOR_ELEVATOR = 'waiting-for-elevator',
   IN_ELEVATOR = 'in-elevator',
   AT_DESTINATION = 'at-destination'
 }
