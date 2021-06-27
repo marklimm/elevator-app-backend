@@ -3,6 +3,7 @@ import { getRandomFloor, getRandomName } from '../lib/Randomizer'
 import { buildingDetails } from './Building'
 import { Direction, User, Users, UserStatus } from '../lib/BuildingActions'
 import { addElevatorRequest } from './Elevators'
+import { broadcastUserStatusUpdate } from './Broadcaster'
 
 let numPeople = 500
 
@@ -52,7 +53,7 @@ export const resetUsers = () : void => {
 }
 
 export const spawnNewUser = async () : Promise<User> => {
-  const name = getRandomName()
+  const name = getRandomName(getUsersAsArray().map(user => user.name))
   const currFloor = getRandomFloor(buildingDetails.numFloors)
   const destFloor = getRandomFloor(buildingDetails.numFloors, currFloor)
 
@@ -68,26 +69,49 @@ export const spawnNewUser = async () : Promise<User> => {
   return users[name]
 }
 
-const makeElevatorRequests = async (usersMakingElevatorRequests: User[]) => {
-  for (const user of usersMakingElevatorRequests) {
-    console.log(`${user.name} is making a request to go to ${user.destFloor}`)
+const makeElevatorRequest = async (userMakingElevatorRequest: User) => {
+  // for (const user of usersMakingElevatorRequests) {
+  console.log(`${userMakingElevatorRequest.name} is making a request to go to ${userMakingElevatorRequest.destFloor}`)
 
-    const direction = user.currFloor < user.destFloor ? Direction.GOING_UP : Direction.GOING_DOWN
+  const direction = userMakingElevatorRequest.currFloor < userMakingElevatorRequest.destFloor ? Direction.GOING_UP : Direction.GOING_DOWN
 
-    await addElevatorRequest({ fromFloor: user.destFloor, direction })
+  await addElevatorRequest({ fromFloor: userMakingElevatorRequest.currFloor, direction })
 
+  await _lock.acquire(USERS_LOCK, () => {
     //  specify that the user is now waiting for the elevator
-    user.status = UserStatus.WAITING_ON_ELEVATOR
+    userMakingElevatorRequest.status = UserStatus.WAITING_FOR_ELEVATOR
+  })
+}
+
+export const processCallingTheElevator = async (name: string) : Promise<void> => {
+  const user = users[name]
+
+  if (user.status === UserStatus.NEWLY_SPAWNED) {
+    await makeElevatorRequest(user)
+
+    //  broadcast that someone has just made an elevator request
+    // console.log('user who just made an elevator request', user.status)
+
+    broadcastUserStatusUpdate(user)
   }
 }
 
-export const usersMakeElevatorRequests = async () : Promise<User[]> => {
-  const usersArr: User[] = getUsersAsArray()
+//  getting the sense that maybe I should implement the person loop differently, because right now it's acting more as a "peopleLoop"
 
-  //  check if any users are calling the elevator
-  const usersMakingElevatorRequests = usersArr.filter(user => user.status === UserStatus.NEWLY_SPAWNED)
+// export const processGettingOnAndPressingButton = async () : Promise<void> => {
+//   const usersArr: User[] = getUsersAsArray()
 
-  await makeElevatorRequests(usersMakingElevatorRequests)
+//   //  check if any users are waiting on the elevator
+//   const usersWaitingForElevator = usersArr.filter(user => user.status === UserStatus.WAITING_FOR_ELEVATOR)
 
-  return usersMakingElevatorRequests
-}
+//   for (const user of usersMakingElevatorRequests) {
+//     console.log(`${user.name} is making a request to go to ${user.destFloor}`)
+
+//     const direction = user.currFloor < user.destFloor ? Direction.GOING_UP : Direction.GOING_DOWN
+
+//     await addElevatorRequest({ fromFloor: user.currFloor, direction })
+
+//     //  specify that the user is now waiting for the elevator
+//     user.status = UserStatus.WAITING_FOR_ELEVATOR
+//   }
+// }
