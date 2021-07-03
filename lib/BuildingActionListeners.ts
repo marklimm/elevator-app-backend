@@ -3,8 +3,8 @@
 
 import { Socket } from 'socket.io'
 
-import { DECREASE_PEOPLE, INCREASE_PEOPLE, OkOrError, StatusUpdateResponse } from './BuildingActions'
-import { addPeople, getNumPeople, removePeople } from '../state/People'
+// import { DECREASE_PEOPLE, INCREASE_PEOPLE, OkOrError, StatusUpdateResponse } from './BuildingActions.exclude'
+// import { addPeople, getNumPeople, removePeople } from '../state/People'
 
 /**
   * This function defines listeners for the real-time messages sent by the clients
@@ -23,31 +23,31 @@ export const setClientActionListeners = (socket: Socket) : void => {
   //   callback(elevatorRequestResponse)
   // })
 
-  socket.on(INCREASE_PEOPLE, (increaseBy, callback) => {
-    addPeople(increaseBy)
+  // socket.on(INCREASE_PEOPLE, (increaseBy, callback) => {
+  //   addPeople(increaseBy)
 
-    const numPeople = getNumPeople()
+  //   const numPeople = getNumPeople()
 
-    const numPeopleUpdatedResponse: StatusUpdateResponse = {
-      numPeople,
-      status: OkOrError.Ok,
-      message: `There are now ${numPeople} in the building`
-    }
+  //   const numPeopleUpdatedResponse: StatusUpdateResponse = {
+  //     numPeople,
+  //     status: OkOrError.Ok,
+  //     message: `There are now ${numPeople} in the building`
+  //   }
 
-    callback(numPeopleUpdatedResponse)
-  })
+  //   callback(numPeopleUpdatedResponse)
+  // })
 
-  socket.on(DECREASE_PEOPLE, (decreaseBy, callback) => {
-    removePeople(decreaseBy)
+  // socket.on(DECREASE_PEOPLE, (decreaseBy, callback) => {
+  //   removePeople(decreaseBy)
 
-    const numPeople = getNumPeople()
+  //   const numPeople = getNumPeople()
 
-    const numPeopleUpdatedResponse: StatusUpdateResponse = {
-      numPeople,
-      status: OkOrError.Ok,
-      message: `There are now ${numPeople} in the building`
-    }
+  //   const numPeopleUpdatedResponse: StatusUpdateResponse = {
+  //     numPeople,
+  //     status: OkOrError.Ok,
+  //     message: `There are now ${numPeople} in the building`
+  //   }
 
-    callback(numPeopleUpdatedResponse)
-  })
+  //   callback(numPeopleUpdatedResponse)
+  // })
 }

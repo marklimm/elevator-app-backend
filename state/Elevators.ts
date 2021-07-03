@@ -1,5 +1,6 @@
 import AsyncLock from 'async-lock'
-import { Direction, Elevator, ElevatorRequest, Elevators, ElevatorStatus } from '../lib/BuildingActions'
+import { Direction, Elevator, ElevatorRequest, Elevators, ElevatorStatus } from '../lib/types/Elevator'
+
 const ELEVATOR_REQUEST_LOCK = 'elevator-request-lock'
 
 const ELEVATOR_LOCK = 'elevator-lock'
@@ -127,8 +128,6 @@ const chooseElevator = (elevatorRequest: ElevatorRequest) => {
 
 export const handleElevatorRequest = async () : Promise<Elevator | void> => {
   const elevatorRequest = getElevatorRequest()
-
-  console.log('retrieved elevatorRequest', elevatorRequest)
 
   if (!elevatorRequest) {
     console.log('no elevator requests to process')
