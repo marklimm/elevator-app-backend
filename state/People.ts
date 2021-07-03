@@ -1,98 +1,99 @@
 import AsyncLock from 'async-lock'
 import { getRandomFloor, getRandomName } from '../lib/Randomizer'
 import { buildingDetails } from './Building'
-import { Direction, User, Users, UserStatus } from '../lib/BuildingActions'
-import { addElevatorRequest } from './Elevators'
-import { broadcastUserStatusUpdate } from './Broadcaster'
 
-let numPeople = 500
+import { addElevatorRequest } from './Elevators'
+
+import { People, Person, PersonStatus } from '../lib/types/Person'
+import { Direction } from '../lib/types/Elevator'
+
+// const numPeople = 500
 
 //  maybe it's worth converting this to a class so that we can get private variables ... so that you can't modify usersStatus from outside of the class
-let users: Users = {}
+let people: People = {}
 
 const _lock = new AsyncLock()
 
-const NUM_PEOPLE_LOCK = 'num-people-lock'
+// const NUM_PEOPLE_LOCK = 'num-people-lock'
 
-const USERS_LOCK = 'users-lock'
+const PEOPLE_LOCK = 'people-lock'
 
-export const addPeople = async (increaseBy = 0) : Promise<void> => {
-  await _lock.acquire(NUM_PEOPLE_LOCK, () => {
-    numPeople += increaseBy
+// export const addPeople = async (increaseBy = 0) : Promise<void> => {
+//   await _lock.acquire(NUM_PEOPLE_LOCK, () => {
+//     numPeople += increaseBy
+//   })
+// }
+
+// export const removePeople = async (decreaseBy = 0) : Promise<void> => {
+//   await _lock.acquire(NUM_PEOPLE_LOCK, () => {
+//     numPeople -= decreaseBy
+//   })
+// }
+
+/**
+ * Reset the list of people.  This a cleanup function that gets called when there are no clients connected to the server
+ */
+export const clearPeople = () : void => {
+  people = {}
+}
+
+export const getPeople = () : People => {
+  return people
+}
+
+export const getPeopleAsArray = () : Person[] => {
+  return Object.keys(people).map(name => {
+    return people[name]
   })
 }
 
-export const removePeople = async (decreaseBy = 0) : Promise<void> => {
-  await _lock.acquire(NUM_PEOPLE_LOCK, () => {
-    numPeople -= decreaseBy
-  })
-}
-
+/**
+ * Returns the number of people who are currently interacting with elevators
+ * @returns
+ */
 export const getNumPeople = () : number => {
-  return numPeople
+  return Object.keys(people).length
 }
 
-export const getUsers = () : Users => {
-  return users
-}
-
-export const getUsersAsArray = () : User[] => {
-  return Object.keys(users).map(name => {
-    return users[name]
-  })
-}
-
-//  users of elevators
-
-export const getNumUsers = () : number => {
-  return Object.keys(users).length
-}
-
-export const resetUsers = () : void => {
-  users = {}
-}
-
-export const spawnNewUser = async () : Promise<User> => {
-  const name = getRandomName(getUsersAsArray().map(user => user.name))
+export const spawnNewPerson = async () : Promise<Person> => {
+  const name = getRandomName(getPeopleAsArray().map(person => person.name))
   const currFloor = getRandomFloor(buildingDetails.numFloors)
   const destFloor = getRandomFloor(buildingDetails.numFloors, currFloor)
 
-  await _lock.acquire(USERS_LOCK, () => {
+  await _lock.acquire(PEOPLE_LOCK, () => {
   //  add them to users
-    users[name] = {
-      name, currFloor, destFloor, status: UserStatus.NEWLY_SPAWNED
+    people[name] = {
+      name, currFloor, destFloor, status: PersonStatus.NEWLY_SPAWNED
     }
   })
 
-  console.log('after adding new user : users', users)
-
-  return users[name]
+  return people[name]
 }
 
-const makeElevatorRequest = async (userMakingElevatorRequest: User) => {
+const makeElevatorRequest = async (personMakingElevatorRequest: Person) => {
   // for (const user of usersMakingElevatorRequests) {
-  console.log(`${userMakingElevatorRequest.name} is making a request to go to ${userMakingElevatorRequest.destFloor}`)
+  console.log(`${personMakingElevatorRequest.name} is making a request to go to ${personMakingElevatorRequest.destFloor}`)
 
-  const direction = userMakingElevatorRequest.currFloor < userMakingElevatorRequest.destFloor ? Direction.GOING_UP : Direction.GOING_DOWN
+  const direction = personMakingElevatorRequest.currFloor < personMakingElevatorRequest.destFloor ? Direction.GOING_UP : Direction.GOING_DOWN
 
-  await addElevatorRequest({ fromFloor: userMakingElevatorRequest.currFloor, direction })
+  await addElevatorRequest({ fromFloor: personMakingElevatorRequest.currFloor, direction })
 
-  await _lock.acquire(USERS_LOCK, () => {
+  await _lock.acquire(PEOPLE_LOCK, () => {
     //  specify that the user is now waiting for the elevator
-    userMakingElevatorRequest.status = UserStatus.WAITING_FOR_ELEVATOR
+    personMakingElevatorRequest.status = PersonStatus.WAITING_FOR_ELEVATOR
   })
 }
 
 export const processCallingTheElevator = async (name: string) : Promise<void> => {
-  const user = users[name]
+  const person = people[name]
 
-  if (user.status === UserStatus.NEWLY_SPAWNED) {
-    await makeElevatorRequest(user)
+  if (person.status === PersonStatus.NEWLY_SPAWNED) {
+    await makeElevatorRequest(person)
 
     //  broadcast that someone has just made an elevator request
-    // console.log('user who just made an elevator request', user.status)
+    // console.log('person who just made an elevator request', person.status)
 
-    broadcastUserStatusUpdate(user)
+    // broadcastPersonStatusUpdate(person)
   }
 }
 

@@ -1,10 +1,10 @@
 import { Server as SocketIOServer } from 'socket.io'
 
 // import { statusLoop } from './statusLoop'
-import { fluctuatingNumPeopleLoop } from './fluctuatingNumPeopleLoop'
+// import { fluctuatingNumPeopleLoop } from './fluctuatingNumPeopleLoop'
 import { elevatorLoop } from './elevatorLoop'
-import { spawnNewUserLoop } from './spawnNewUserLoop'
-import { GameLoopIntervals } from '../lib/BuildingActions'
+import { spawnNewPersonLoop } from './spawnNewPersonLoop'
+import { GameLoopIntervals } from '../lib/types/GameLoop'
 import { getElevatorsAsArray } from '../state/Elevators'
 import { elevatorManagerLoop } from './elevatorManagerLoop'
 
@@ -33,7 +33,7 @@ export class GameLoopManager {
     //  fluctating number of people in the building
     //  this.intervalsArr.push()
 
-    this.intervalsObj['fluctuating-people'] = setInterval(fluctuatingNumPeopleLoop.bind(this), 3000)
+    // this.intervalsObj['fluctuating-people'] = setInterval(fluctuatingNumPeopleLoop.bind(this), 3000)
 
     //  "main" loop ... wondering if this will end up changing
     //  this.intervalsArr.push(setInterval(this.mainLoop.bind(this), 2500))
@@ -42,7 +42,7 @@ export class GameLoopManager {
     // this.intervalsArr.push(setInterval(getElevatorManagerLoop(this._io), 2500))
 
     //  this.intervalsArr.push()
-    this.intervalsObj['spawn-new-user-loop'] = setInterval(spawnNewUserLoop.bind(this, this.intervalsObj), 3000)
+    this.intervalsObj['spawn-new-person-loop'] = setInterval(spawnNewPersonLoop.bind(this, this.intervalsObj), 3000)
 
     //  this.intervalsArr.push(setInterval(personLoop.bind(this), 5000))
 

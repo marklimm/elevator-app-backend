@@ -1,11 +1,10 @@
 import { Socket } from 'socket.io'
-import { NewConnectionBuildingResponse, OkOrError } from './BuildingActions'
+import { NewConnectionBuildingResponse, OkOrError } from './types/Events'
 
 import { gameLoopManager } from '../state/GameLoops'
 import { buildingDetails } from '../state/Building'
 import { resetElevators } from '../state/Elevators'
-import { resetUsers } from '../state/People'
-
+import { clearPeople, getNumPeople } from '../state/People'
 /**
  * The number of currently connected clients
  */
@@ -19,6 +18,9 @@ export const onNewConnection = (socket: Socket) : void => {
 
   numClients += 1
   console.log(`New user connected - there are now ${numClients} client(s) connected`)
+
+  // const numPeople = getNumPeople()
+  // console.log(`numPeople - ${numPeople}`)
 
   const newConnectionResponse: NewConnectionBuildingResponse = {
     ...buildingDetails,
@@ -41,8 +43,10 @@ export const onDisconnect = () : void => {
 
     gameLoopManager.stop()
 
-    resetUsers()
+    //  delete any people that might currently be in state
+    clearPeople()
 
+    //  reset the elevators back to their initial state (on the first floor and ready to take a request)
     resetElevators()
   }
 }
