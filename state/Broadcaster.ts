@@ -34,6 +34,20 @@ export const broadcastNewPersonSpawned = (person: Person) : void => {
   _io.emit('person-update', newPersonSpawnedUpdate)
 }
 
+export const broadcastPersonRequestedElevator = (person: Person) : void => {
+  const personRequestedElevatorUpdate: PersonUpdate = {
+    type: PersonUpdateType.REQUESTING_ELEVATOR,
+    person: {
+      personId: person.name,
+      name: person.name
+    },
+    currFloor: person.currFloor,
+    destFloor: person.destFloor
+  }
+
+  _io.emit('person-update', personRequestedElevatorUpdate)
+}
+
 export const broadcastElevatorMoving = (elevator: Elevator) : void => {
   const elevatorMovingUpdate: ElevatorUpdate = {
     type: ElevatorUpdateType.MOVING_TO_FLOOR,

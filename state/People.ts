@@ -6,6 +6,7 @@ import { addElevatorRequest } from './Elevators'
 
 import { People, Person, PersonStatus } from '../lib/types/Person'
 import { Direction } from '../lib/types/Elevator'
+import { broadcastPersonRequestedElevator } from './Broadcaster'
 
 // const numPeople = 500
 
@@ -61,7 +62,7 @@ export const spawnNewPerson = async () : Promise<Person> => {
   const destFloor = getRandomFloor(buildingDetails.numFloors, currFloor)
 
   await _lock.acquire(PEOPLE_LOCK, () => {
-  //  add them to users
+  //  add the newly-spawned person to the list of people
     people[name] = {
       name, currFloor, destFloor, status: PersonStatus.NEWLY_SPAWNED
     }
@@ -93,7 +94,7 @@ export const processCallingTheElevator = async (name: string) : Promise<void> =>
     //  broadcast that someone has just made an elevator request
     // console.log('person who just made an elevator request', person.status)
 
-    // broadcastPersonStatusUpdate(person)
+    broadcastPersonRequestedElevator(person)
   }
 }
 
