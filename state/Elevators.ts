@@ -55,11 +55,11 @@ export const removeElevatorRequest = async () : Promise<ElevatorRequest | null |
   return elevatorRequest
 }
 
-const elevatorIsReady = (elevator: Elevator) => elevator.status === ElevatorStatus.READY
+// const elevatorIsReady = (elevator: Elevator) => elevator.status === ElevatorStatus.READY
 
-const elevatorOnSameFloorAsRequest = (elevator: Elevator, elevatorRequest: ElevatorRequest) => elevator.currFloor === elevatorRequest.fromFloor
+// const elevatorOnSameFloorAsRequest = (elevator: Elevator, elevatorRequest: ElevatorRequest) => elevator.currFloor === elevatorRequest.fromFloor
 
-const elevatorGoingInSameDirectionAsRequest = (elevator: Elevator, elevatorRequest: ElevatorRequest) => elevator.status === ElevatorStatus.MOVING && elevator.direction === elevatorRequest.direction
+// const elevatorGoingInSameDirectionAsRequest = (elevator: Elevator, elevatorRequest: ElevatorRequest) => elevator.status === ElevatorStatus.MOVING && elevator.direction === elevatorRequest.direction
 
 export const elevatorShouldOpenDoors = (elevator: Elevator) : boolean => {
   return elevator.currFloor === elevator.destFloor && elevator.status === ElevatorStatus.MOVING

@@ -4,7 +4,7 @@ import { NewConnectionBuildingResponse, OkOrError } from './types/EventPayloads'
 import { gameLoopManager } from '../state/GameLoops'
 import { buildingDetails } from '../state/Building'
 import { resetElevators } from '../state/Elevators'
-import { clearPeople, getNumPeople } from '../state/People'
+import { clearPeople } from '../state/People'
 /**
  * The number of currently connected clients
  */

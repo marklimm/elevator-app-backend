@@ -11,6 +11,9 @@ import { Socket } from 'socket.io'
   * @param socket
   */
 export const setClientActionListeners = (socket: Socket) : void => {
+  //  using socket just to resolve the linter error
+  console.log('socket.id', socket.id)
+
   // socket.on(REQUEST_ELEVATOR, (destFloor, callback) => {
   //   addElevatorRequest({ destFloor })
 
