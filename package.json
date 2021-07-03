@@ -7,15 +7,17 @@
     "build": "tsc --project ./",
     "dev": "nodemon index.ts",
     "eslint": "./node_modules/.bin/eslint \"*/**/*.{js,ts,tsx}\" --fix",
-    "lint": "npm run eslint",
+    "lint": "npm run eslint && npm run tsc",
     "start": "npm run build && node ./build/index.js",
-    "test": "jest"
+    "test": "jest",
+    "tsc": "./node_modules/.bin/tsc --noEmit"
   },
   "scriptsComments": {
     "build": "build a javascript version of the typescript express server",
     "dev": "run nodemon against index.ts during local development",
     "start": "build the javascript version of the express server then run it",
-    "test": "run unit tests"
+    "test": "run unit tests",
+    "tsc": "check for typescript errors"
   },
   "author": "",
   "license": "ISC",
