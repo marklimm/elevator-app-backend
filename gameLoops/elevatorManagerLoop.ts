@@ -1,6 +1,6 @@
 
 import { getElevatorsAsArray, handleElevatorRequest } from '../state/Elevators'
-import { broadcastElevatorStatusUpdate } from '../state/Broadcaster'
+// import { broadcastElevatorStatusUpdate } from '../state/Broadcaster'
 
 export const elevatorManagerLoop = async () : Promise<void> => {
   const elevatorsArr = getElevatorsAsArray()
@@ -19,6 +19,6 @@ export const elevatorManagerLoop = async () : Promise<void> => {
   const elevatorTakingRequest = await handleElevatorRequest()
 
   if (elevatorTakingRequest) {
-    broadcastElevatorStatusUpdate(elevatorTakingRequest)
+    // broadcastElevatorStatusUpdate(elevatorTakingRequest)
   }
 }

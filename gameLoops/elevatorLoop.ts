@@ -1,5 +1,5 @@
 import { Elevator, ElevatorStatus } from '../lib/BuildingActions'
-import { broadcastElevatorStatusUpdate } from '../state/Broadcaster'
+import { broadcastElevatorMoving, broadcastElevatorOpensDoors } from '../state/Broadcaster'
 import { elevatorMoves, elevatorOpensDoors, elevators } from '../state/Elevators'
 
 export const elevatorLoop = async ({ name }: Elevator) : Promise<void> => {
@@ -20,7 +20,7 @@ export const elevatorLoop = async ({ name }: Elevator) : Promise<void> => {
     console.log('opening doors')
     await elevatorOpensDoors(elevator)
 
-    broadcastElevatorStatusUpdate(elevator)
+    broadcastElevatorOpensDoors(elevator)
 
     return
   }
@@ -29,7 +29,8 @@ export const elevatorLoop = async ({ name }: Elevator) : Promise<void> => {
     await elevatorMoves(elevator)
 
     console.log(`elevator has moved - ${new Date()}`)
-    broadcastElevatorStatusUpdate(elevator)
+
+    broadcastElevatorMoving(elevator)
   }
 
   //  the ElevatorStatus.READY status is handled by the elevatorManagerLoop

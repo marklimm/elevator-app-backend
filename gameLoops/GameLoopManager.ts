@@ -53,9 +53,6 @@ export class GameLoopManager {
 
     //  this.intervalsArr.push(setInterval(elevatorManagerLoop.bind(this), 4000))
     this.intervalsObj['elevator-manager'] = setInterval(elevatorManagerLoop.bind(this), 4000)
-
-    //  reporting on any status changes that were caused by the above loops
-    //  this.intervalsArr.push(setInterval(statusLoop.bind(this), 2000))
   }
 
   public stop () : void {
