@@ -30,7 +30,7 @@ export const getRandomName = (usedNames: string[]) : string => {
 export const getRandomFloor = (numFloors: number, notThisFloor = -1) : number => {
   let selectedFloor
 
-  while (selectedFloor === undefined || selectedFloor === notThisFloor) {
+  while (!selectedFloor || selectedFloor === notThisFloor) {
     selectedFloor = Math.floor(Math.random() * numFloors) + 1
   }
 

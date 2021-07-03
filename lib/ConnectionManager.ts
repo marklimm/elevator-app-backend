@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io'
-import { NewConnectionBuildingResponse, OkOrError } from './types/Events'
+import { NewConnectionBuildingResponse, OkOrError } from './types/EventPayloads'
 
 import { gameLoopManager } from '../state/GameLoops'
 import { buildingDetails } from '../state/Building'

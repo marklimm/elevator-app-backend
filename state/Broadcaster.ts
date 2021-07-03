@@ -1,5 +1,5 @@
 import { Server } from 'socket.io'
-import { ElevatorUpdate, ElevatorUpdateType, PersonUpdate, PersonUpdateType } from '../lib/types/Events'
+import { ElevatorUpdate, ElevatorUpdateType, PersonUpdate, PersonUpdateType } from '../lib/types/EventPayloads'
 import { Elevator } from '../lib/types/Elevator'
 import { Person } from '../lib/types/Person'
 
