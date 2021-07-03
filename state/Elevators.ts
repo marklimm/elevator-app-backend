@@ -60,8 +60,8 @@ const elevatorOnSameFloorAsRequest = (elevator: Elevator, elevatorRequest: Eleva
 
 const elevatorGoingInSameDirectionAsRequest = (elevator: Elevator, elevatorRequest: ElevatorRequest) => elevator.status === ElevatorStatus.MOVING && elevator.direction === elevatorRequest.direction
 
-const elevatorShouldOpenDoor = (elevator: Elevator, elevatorRequest: ElevatorRequest) => {
-  return elevatorOnSameFloorAsRequest(elevator, elevatorRequest) && (elevatorIsReady(elevator) || elevatorGoingInSameDirectionAsRequest(elevator, elevatorRequest))
+export const elevatorShouldOpenDoors = (elevator: Elevator) : boolean => {
+  return elevator.currFloor === elevator.destFloor && elevator.status === ElevatorStatus.MOVING
 }
 
 const getDirection = (currFloor = -1, destFloor = -1) => {

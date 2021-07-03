@@ -1,6 +1,6 @@
 import { Elevator, ElevatorStatus } from '../lib/BuildingActions'
 import { broadcastElevatorMoving, broadcastElevatorOpensDoors } from '../state/Broadcaster'
-import { elevatorMoves, elevatorOpensDoors, elevators } from '../state/Elevators'
+import { elevatorMoves, elevatorOpensDoors, elevators, elevatorShouldOpenDoors } from '../state/Elevators'
 
 export const elevatorLoop = async ({ name }: Elevator) : Promise<void> => {
   const cantOpenDoorsStatuses = [ElevatorStatus.INACTIVE, ElevatorStatus.DOORS_CLOSING, ElevatorStatus.DOORS_OPENING]
@@ -14,7 +14,7 @@ export const elevatorLoop = async ({ name }: Elevator) : Promise<void> => {
     return
   }
 
-  if (elevator.status === ElevatorStatus.MOVING && elevator.currFloor === elevator.destFloor) {
+  if (elevatorShouldOpenDoors(elevator)) {
     //  elevator has reached its destination, open the doors
 
     console.log('opening doors')
