@@ -51,14 +51,21 @@ const chooseElevator = (elevatorRequest: ElevatorRequest) => {
 }
 
 export const handleElevatorRequest = () : Elevator | void => {
+  console.log('-- START -- handleElevatorRequest')
+
+  //  the ELEVATOR_REQUEST_LOCK has already been taken
   const elevatorRequest = getElevatorRequest()
 
   if (!elevatorRequest) {
-    console.log('no elevator requests to process')
+    // console.log('no elevator requests to process')
     return
   }
 
+  console.log('elevatorRequest to be processed', elevatorRequest)
+
   const chosenElevator = chooseElevator(elevatorRequest)
+
+  console.log('chosenElevator', chosenElevator)
 
   if (!chosenElevator) {
     console.log('no elevator is available to handle the request - will try again later')
@@ -71,6 +78,10 @@ export const handleElevatorRequest = () : Elevator | void => {
   removeElevatorRequest()
 
   const elevatorTakingRequest = elevatorTakesRequest(chosenElevator, elevatorRequest)
+
+  console.log('elevatorTakingRequest', elevatorTakingRequest)
+
+  console.log('-- END -- handleElevatorRequest')
 
   return elevatorTakingRequest
 }

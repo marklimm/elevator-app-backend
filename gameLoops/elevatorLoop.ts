@@ -7,9 +7,9 @@ export const elevatorLoop = async ({ name }: Elevator) : Promise<void> => {
   const cantOpenDoorsStatuses = [ElevatorStatus.INACTIVE, ElevatorStatus.DOORS_CLOSING, ElevatorStatus.DOORS_OPENING]
 
   const elevator = elevators[name]
-  // console.log(`elevator loop for ${elevator.name}`)
 
-  console.log('-- elevator status', elevator.status)
+  // console.log('-- elevator status', elevator.status)
+
   //  exit this function if the elevator shouldn't open its doors
   if (cantOpenDoorsStatuses.indexOf(elevator.status) > -1) {
     // console.log('exiting because elevator.status', elevator.status)

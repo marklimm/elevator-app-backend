@@ -6,12 +6,11 @@ import { addElevatorRequest } from './ElevatorRequests'
 
 import { People, Person, PersonStatus } from '../lib/types/Person'
 import { Direction } from '../lib/types/Elevator'
-import { broadcastPersonRequestedElevator } from '../lib/Broadcaster'
 
 // const numPeople = 500
 
 //  maybe it's worth converting this to a class so that we can get private variables ... so that you can't modify usersStatus from outside of the class
-let people: People = {}
+export let people: People = {}
 
 const _lock = new AsyncLock()
 
@@ -36,10 +35,6 @@ const PEOPLE_LOCK = 'people-lock'
  */
 export const clearPeople = () : void => {
   people = {}
-}
-
-export const getPeople = () : People => {
-  return people
 }
 
 export const getPeopleAsArray = () : Person[] => {
@@ -71,7 +66,7 @@ export const spawnNewPerson = async () : Promise<Person> => {
   return people[name]
 }
 
-const makeElevatorRequest = async (personMakingElevatorRequest: Person) => {
+export const makeElevatorRequest = async (personMakingElevatorRequest: Person) : Promise<void> => {
   // for (const user of usersMakingElevatorRequests) {
   console.log(`${personMakingElevatorRequest.name} is making a request to go to ${personMakingElevatorRequest.destFloor}`)
 
@@ -83,19 +78,6 @@ const makeElevatorRequest = async (personMakingElevatorRequest: Person) => {
     //  specify that the user is now waiting for the elevator
     personMakingElevatorRequest.status = PersonStatus.WAITING_FOR_ELEVATOR
   })
-}
-
-export const processCallingTheElevator = async (name: string) : Promise<void> => {
-  const person = people[name]
-
-  if (person.status === PersonStatus.NEWLY_SPAWNED) {
-    await makeElevatorRequest(person)
-
-    //  broadcast that someone has just made an elevator request
-    // console.log('person who just made an elevator request', person.status)
-
-    broadcastPersonRequestedElevator(person)
-  }
 }
 
 //  getting the sense that maybe I should implement the person loop differently, because right now it's acting more as a "peopleLoop"

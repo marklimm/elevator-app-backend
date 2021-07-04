@@ -18,6 +18,8 @@ export const removeElevatorRequest = () : ElevatorRequest | null | undefined => 
 
   const elevatorRequest = elevatorRequestQueue.shift()
 
+  console.log('elevatorRequestQueue after removal', elevatorRequestQueue)
+
   return elevatorRequest
 }
 
