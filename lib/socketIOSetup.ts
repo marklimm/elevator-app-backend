@@ -2,11 +2,11 @@ import { Server } from 'http'
 import { Server as SocketIOServer, Socket } from 'socket.io'
 import dotenv from 'dotenv'
 
-import { setConnectionListeners } from './ConnectionManager'
+import { setConnectionListeners, initializeGameLoops } from './ConnectionManager'
 import { setClientActionListeners } from './BuildingActionListeners'
 
 import { initializeBroadcasters } from './broadcasts/Broadcaster'
-import { initializeGameLoops } from './GameLoops'
+
 import { resetElevators } from '../state/Elevators'
 
 export const initSocketIO = (httpServer: Server) : void => {

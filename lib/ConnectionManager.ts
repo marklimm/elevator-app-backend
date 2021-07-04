@@ -1,14 +1,22 @@
-import { Socket } from 'socket.io'
+import { Server as SocketIOServer, Socket } from 'socket.io'
 import { NewConnectionBuildingResponse, OkOrError } from './types/EventPayloads'
 
-import { gameLoopManager } from './GameLoops'
+import { GameLoopManager } from '../gameLoops/GameLoopManager'
 import { buildingDetails } from '../state/Building'
 import { resetElevators } from '../state/Elevators'
 import { clearPeople } from '../state/People'
+
 /**
  * The number of currently connected clients
  */
 let numClients = 0
+
+let gameLoopManager: GameLoopManager
+
+export const initializeGameLoops = (io: SocketIOServer) : void => {
+  //  initialize the game loops but don't start them yet
+  gameLoopManager = new GameLoopManager(io)
+}
 
 export const onNewConnection = (socket: Socket) : void => {
   if (!gameLoopManager.areRunning) {
