@@ -1,7 +1,7 @@
 import { elevatorMoves, elevatorOpensDoors, elevators, elevatorShouldOpenDoors } from '../state/Elevators'
 import { Elevator } from '../lib/types/Elevator'
 import { ElevatorStatus } from '../lib/types/EventPayloads'
-import { elevatorBroadcaster } from '../lib/broadcasts/Broadcaster'
+import { elevatorBroadcaster } from '../lib/socketIOSetup'
 
 export const elevatorLoop = async ({ name }: Elevator) : Promise<void> => {
   // const cantOpenDoorsStatuses = [ElevatorStatus.INACTIVE, ElevatorStatus.DOORS_CLOSING, ElevatorStatus.DOORS_OPENING]

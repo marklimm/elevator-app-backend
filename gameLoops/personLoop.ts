@@ -4,7 +4,7 @@ import { getElevatorPickingUpPerson, giveElevatorADestination } from '../state/E
 
 import { PersonStatus } from '../lib/types/EventPayloads'
 
-import { personBroadcaster, elevatorBroadcaster } from '../lib/broadcasts/Broadcaster'
+import { elevatorBroadcaster, personBroadcaster } from '../lib/socketIOSetup'
 
 export const personLoop = async (name: string) : Promise<void> => {
   const person = people[name]

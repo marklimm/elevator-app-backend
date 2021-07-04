@@ -2,12 +2,16 @@ import { Server } from 'http'
 import { Server as SocketIOServer, Socket } from 'socket.io'
 import dotenv from 'dotenv'
 
-import { setConnectionListeners, initializeGameLoops } from './ConnectionManager'
+import { ConnectionManager } from './ConnectionManager'
 import { setClientActionListeners } from './BuildingActionListeners'
 
-import { initializeBroadcasters } from './broadcasts/Broadcaster'
-
 import { resetElevators } from '../state/Elevators'
+
+import { PersonBroadcaster } from './broadcasts/PersonBroadcaster'
+import { ElevatorBroadcaster } from './broadcasts/ElevatorBroadcaster'
+
+export let elevatorBroadcaster: ElevatorBroadcaster
+export let personBroadcaster: PersonBroadcaster
 
 export const initSocketIO = (httpServer: Server) : void => {
   //  allows us to read environment variables
@@ -23,13 +27,16 @@ export const initSocketIO = (httpServer: Server) : void => {
   const io = new SocketIOServer(httpServer, options)
 
   resetElevators()
-  initializeGameLoops(io)
-  initializeBroadcasters(io)
+
+  const connectionManager = new ConnectionManager(io)
+
+  elevatorBroadcaster = new ElevatorBroadcaster(io)
+  personBroadcaster = new PersonBroadcaster(io)
 
   io.on('connection', (socket: Socket) => {
     //  this executes whenever a client connects
 
-    setConnectionListeners(socket)
+    connectionManager.setConnectionListeners(socket)
 
     setClientActionListeners(socket)
   })
