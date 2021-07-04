@@ -4,7 +4,8 @@ import { buildingDetails } from './Building'
 
 import { addElevatorRequest } from './ElevatorRequests'
 
-import { People, Person, PersonStatus } from '../lib/types/Person'
+import { People, Person } from '../lib/types/Person'
+import { PersonStatus } from '../lib/types/EventPayloads'
 import { Direction } from '../lib/types/Elevator'
 
 // const numPeople = 500

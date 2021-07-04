@@ -1,7 +1,7 @@
 import AsyncLock from 'async-lock'
 
 import { findElevatorToTakeRequest } from '../lib/ElevatorManager'
-import { broadcastElevatorTakingRequest } from '../lib/Broadcaster'
+import { elevatorBroadcaster } from '../lib/broadcasts/Broadcaster'
 
 const _lock = new AsyncLock()
 const ELEVATOR_REQUEST_LOCK = 'elevator-request-lock'
@@ -16,6 +16,6 @@ export const elevatorManagerLoop = async () : Promise<void> => {
   })
 
   if (elevatorTakingRequest) {
-    broadcastElevatorTakingRequest(elevatorTakingRequest)
+    elevatorBroadcaster.broadcastElevatorTakingRequest(elevatorTakingRequest)
   }
 }

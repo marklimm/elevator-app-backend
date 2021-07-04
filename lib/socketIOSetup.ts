@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 import { setConnectionListeners } from './ConnectionManager'
 import { setClientActionListeners } from './BuildingActionListeners'
 
-import { initializeBroadcaster } from './Broadcaster'
+import { initializeBroadcasters } from './broadcasts/Broadcaster'
 import { initializeGameLoops } from './GameLoops'
 import { resetElevators } from '../state/Elevators'
 
@@ -24,7 +24,7 @@ export const initSocketIO = (httpServer: Server) : void => {
 
   resetElevators()
   initializeGameLoops(io)
-  initializeBroadcaster(io)
+  initializeBroadcasters(io)
 
   io.on('connection', (socket: Socket) => {
     //  this executes whenever a client connects

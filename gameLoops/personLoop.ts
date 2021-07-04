@@ -2,9 +2,9 @@
 import { people, makeElevatorRequest } from '../state/People'
 import { getElevatorPickingUpPerson, giveElevatorADestination } from '../state/Elevators'
 
-import { PersonStatus } from '../lib/types/Person'
+import { PersonStatus } from '../lib/types/EventPayloads'
 
-import { broadcastPersonPressesButton, broadcastPersonRequestedElevator } from '../lib/Broadcaster'
+import { personBroadcaster, elevatorBroadcaster } from '../lib/broadcasts/Broadcaster'
 
 export const personLoop = async (name: string) : Promise<void> => {
   const person = people[name]
@@ -17,7 +17,8 @@ export const personLoop = async (name: string) : Promise<void> => {
     //  broadcast that someone has just made an elevator request
     // console.log('person who just made an elevator request', person.status)
 
-    broadcastPersonRequestedElevator(person)
+    personBroadcaster.broadcastPersonRequestedElevator(person)
+    return
   }
 
   const elevatorPickingUpPerson = await getElevatorPickingUpPerson(person)
@@ -25,8 +26,6 @@ export const personLoop = async (name: string) : Promise<void> => {
   if (elevatorPickingUpPerson) {
     await giveElevatorADestination(elevatorPickingUpPerson, person)
 
-    broadcastPersonPressesButton(elevatorPickingUpPerson)
+    elevatorBroadcaster.broadcastElevatorReceivesDestination(elevatorPickingUpPerson)
   }
-
-  // await processGettingOnAndPressingButton()
 }

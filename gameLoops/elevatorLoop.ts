@@ -1,7 +1,7 @@
-
-import { broadcastElevatorMoving, broadcastElevatorOpensDoors } from '../lib/Broadcaster'
 import { elevatorMoves, elevatorOpensDoors, elevators, elevatorShouldOpenDoors } from '../state/Elevators'
-import { Elevator, ElevatorStatus } from '../lib/types/Elevator'
+import { Elevator } from '../lib/types/Elevator'
+import { ElevatorStatus } from '../lib/types/EventPayloads'
+import { elevatorBroadcaster } from '../lib/broadcasts/Broadcaster'
 
 export const elevatorLoop = async ({ name }: Elevator) : Promise<void> => {
   // const cantOpenDoorsStatuses = [ElevatorStatus.INACTIVE, ElevatorStatus.DOORS_CLOSING, ElevatorStatus.DOORS_OPENING]
@@ -21,15 +21,15 @@ export const elevatorLoop = async ({ name }: Elevator) : Promise<void> => {
 
     await elevatorOpensDoors(elevator)
 
-    broadcastElevatorOpensDoors(elevator)
+    elevatorBroadcaster.broadcastElevatorOpensDoors(elevator)
 
     return
   }
 
-  if (elevator.status === ElevatorStatus.MOVING) {
+  if (elevator.status === ElevatorStatus.MOVING_TO_FLOOR) {
     await elevatorMoves(elevator)
 
-    broadcastElevatorMoving(elevator)
+    elevatorBroadcaster.broadcastElevatorMoving(elevator)
   }
 
   //  the ElevatorStatus.READY status is handled by the elevatorManagerLoop

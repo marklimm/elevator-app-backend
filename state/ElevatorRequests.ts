@@ -1,6 +1,6 @@
 
-import { Elevator, ElevatorRequest, ElevatorStatus } from '../lib/types/Elevator'
-
+import { Elevator, ElevatorRequest } from '../lib/types/Elevator'
+import { ElevatorStatus } from '../lib/types/EventPayloads'
 import { elevators, getDirection } from './Elevators'
 
 export const elevatorRequestQueue: ElevatorRequest[] = []
@@ -36,7 +36,7 @@ export const elevatorTakesRequest = (elevator: Elevator, elevatorRequest: Elevat
     ...elevator,
     destFloor: elevatorRequest.destFloor,
     direction: getDirection(elevator.currFloor, elevatorRequest.destFloor),
-    status: ElevatorStatus.MOVING
+    status: ElevatorStatus.MOVING_TO_FLOOR
   }
 
   elevators[elevator.name] = updatedElevator

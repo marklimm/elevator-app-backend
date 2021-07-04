@@ -1,5 +1,6 @@
 import { GameLoopIntervals } from '../lib/types/GameLoop'
-import { broadcastNewPersonSpawned } from '../lib/Broadcaster'
+import { personBroadcaster } from '../lib/broadcasts/Broadcaster'
+
 import { getNumPeople, spawnNewPerson } from '../state/People'
 import { personLoop } from './personLoop'
 
@@ -14,5 +15,5 @@ export const spawnNewPersonLoop = async (intervalsObj: GameLoopIntervals) : Prom
   intervalsObj[`${newPerson.name}`] = setInterval(personLoop.bind(null, newPerson.name), 5000)
 
   //  broadcast that a new person has been created
-  broadcastNewPersonSpawned(newPerson)
+  personBroadcaster.broadcastNewPersonSpawned(newPerson)
 }

@@ -1,5 +1,6 @@
 import AsyncLock from 'async-lock'
-import { Direction, Elevator, ElevatorRequest, Elevators, ElevatorStatus } from '../lib/types/Elevator'
+import { Direction, Elevator, ElevatorRequest, Elevators } from '../lib/types/Elevator'
+import { ElevatorStatus } from '../lib/types/EventPayloads'
 import { Person } from '../lib/types/Person'
 
 const ELEVATOR_LOCK = 'elevator-lock'
@@ -42,7 +43,7 @@ export const getElevatorsAsArray = () : Elevator[] => {
 // const elevatorGoingInSameDirectionAsRequest = (elevator: Elevator, elevatorRequest: ElevatorRequest) => elevator.status === ElevatorStatus.MOVING && elevator.direction === elevatorRequest.direction
 
 export const elevatorShouldOpenDoors = (elevator: Elevator) : boolean => {
-  return elevator.currFloor === elevator.destFloor && elevator.status === ElevatorStatus.MOVING
+  return elevator.currFloor === elevator.destFloor && elevator.status === ElevatorStatus.MOVING_TO_FLOOR
 }
 
 export const getDirection = (currFloor = -1, destFloor = -1) : Direction => {
@@ -82,7 +83,7 @@ export const giveElevatorADestination = async ({ name }: Elevator, person: Perso
   const elevator = elevators[name]
 
   await _lock.acquire(ELEVATOR_LOCK, () => {
-    elevator.status = ElevatorStatus.MOVING
+    elevator.status = ElevatorStatus.MOVING_TO_FLOOR
     elevator.destFloor = person.destFloor
     elevator.people = [
       ...elevator.people,

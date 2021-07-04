@@ -1,7 +1,8 @@
-import { Elevator, ElevatorRequest, ElevatorStatus } from './types/Elevator'
+import { Elevator, ElevatorRequest } from './types/Elevator'
+import { ElevatorStatus } from './types/EventPayloads'
 import { elevatorTakesRequest, getElevatorRequest, removeElevatorRequest } from '../state/ElevatorRequests'
 
-import { elevatorHeadingTowardsFloor, getElevatorsAsArray } from '../state/Elevators'
+import { getElevatorsAsArray } from '../state/Elevators'
 
 const getClosestReadyElevator = (elevatorsArr: Elevator[], { destFloor }: ElevatorRequest) : Elevator | null => {
   const readyElevators = elevatorsArr.filter(elevator => {
