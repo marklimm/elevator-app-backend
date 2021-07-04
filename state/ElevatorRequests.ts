@@ -30,10 +30,12 @@ export const getElevatorRequest = () : ElevatorRequest | null => {
 }
 
 export const elevatorTakesRequest = (elevator: Elevator, elevatorRequest: ElevatorRequest) : Elevator => {
+  //  I feel like there would be more complicated logic if an elevator is stopping mid-way to also answer a new request that is going in the same direction that the elevator is already going
+
   const updatedElevator = {
     ...elevator,
-    destFloor: elevatorRequest.fromFloor,
-    direction: getDirection(elevator.currFloor, elevatorRequest.fromFloor),
+    destFloor: elevatorRequest.destFloor,
+    direction: getDirection(elevator.currFloor, elevatorRequest.destFloor),
     status: ElevatorStatus.MOVING
   }
 

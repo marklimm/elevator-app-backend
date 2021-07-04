@@ -3,9 +3,7 @@ import { elevatorTakesRequest, getElevatorRequest, removeElevatorRequest } from 
 
 import { elevatorHeadingTowardsFloor, getElevatorsAsArray } from '../state/Elevators'
 
-const getClosestReadyElevator = ({ fromFloor }: ElevatorRequest) : Elevator | null => {
-  const elevatorsArr = getElevatorsAsArray()
-
+const getClosestReadyElevator = (elevatorsArr: Elevator[], { destFloor }: ElevatorRequest) : Elevator | null => {
   const readyElevators = elevatorsArr.filter(elevator => {
     return elevator.status === ElevatorStatus.READY
   })
@@ -17,9 +15,9 @@ const getClosestReadyElevator = ({ fromFloor }: ElevatorRequest) : Elevator | nu
   let closestReadyElevator = readyElevators[0]
 
   readyElevators.forEach(elevator => {
-    const floorDistance = Math.abs(fromFloor - elevator.currFloor)
+    const floorDistance = Math.abs(destFloor - elevator.currFloor)
 
-    console.log(`${elevator.name} on ${elevator.currFloor} is ${floorDistance} away from ${fromFloor}`)
+    console.log(`${elevator.name} on ${elevator.currFloor} is ${floorDistance} away from ${destFloor}`)
 
     if (floorDistance < closestFloorDistance) {
       closestFloorDistance = floorDistance
@@ -35,25 +33,26 @@ const chooseElevator = (elevatorRequest: ElevatorRequest) => {
   const elevatorsArr = getElevatorsAsArray()
 
   //  is there already an elevator that is heading in the direction of the requested floor?
-  const elevatorHeadingTowardsRequestAlready = elevatorsArr.find(elevator => elevatorHeadingTowardsFloor(elevator, elevatorRequest)
-  )
+  // const elevatorHeadingTowardsRequestAlready = elevatorsArr.find(elevator => elevatorHeadingTowardsFloor(elevator, elevatorRequest)
+  // )
 
-  console.log('elevatorHeadingTowardsRequestAlready', elevatorHeadingTowardsRequestAlready)
+  // console.log('elevatorHeadingTowardsRequestAlready', elevatorHeadingTowardsRequestAlready)
 
-  if (elevatorHeadingTowardsRequestAlready) { return elevatorHeadingTowardsRequestAlready }
+  // if (elevatorHeadingTowardsRequestAlready) { return elevatorHeadingTowardsRequestAlready }
 
   //  what is the closest "Ready" elevator to the destFloor?
-  const closestReadyElevator = getClosestReadyElevator(elevatorRequest)
+  const closestReadyElevator = getClosestReadyElevator(elevatorsArr, elevatorRequest)
 
   console.log('closestReadyElevator', closestReadyElevator)
   console.log('-- chooseElevator END --')
   return closestReadyElevator
 }
 
-export const handleElevatorRequest = () : Elevator | void => {
-  console.log('-- START -- handleElevatorRequest')
+export const findElevatorToTakeRequest = () : Elevator | void => {
+  console.log('-- START -- findElevatorToTakeRequest')
 
-  //  the ELEVATOR_REQUEST_LOCK has already been taken
+  //  the ELEVATOR_REQUEST_LOCK has already been taken before this function is called
+
   const elevatorRequest = getElevatorRequest()
 
   if (!elevatorRequest) {
@@ -72,7 +71,7 @@ export const handleElevatorRequest = () : Elevator | void => {
     return
   }
 
-  console.log(`${chosenElevator.name} is currently on ${chosenElevator.currFloor} and will accept the request to go to ${elevatorRequest.fromFloor}`)
+  console.log(`${chosenElevator.name} is currently on ${chosenElevator.currFloor} and will accept the request to go to ${elevatorRequest.destFloor}`)
 
   //  remove the elevator request from the queue since it's been processed
   removeElevatorRequest()
@@ -81,7 +80,7 @@ export const handleElevatorRequest = () : Elevator | void => {
 
   console.log('elevatorTakingRequest', elevatorTakingRequest)
 
-  console.log('-- END -- handleElevatorRequest')
+  console.log('-- END -- findElevatorToTakeRequest')
 
   return elevatorTakingRequest
 }

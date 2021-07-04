@@ -36,7 +36,7 @@ export const getElevatorsAsArray = () : Elevator[] => {
 
 // const elevatorIsReady = (elevator: Elevator) => elevator.status === ElevatorStatus.READY
 
-// const elevatorOnSameFloorAsRequest = (elevator: Elevator, elevatorRequest: ElevatorRequest) => elevator.currFloor === elevatorRequest.fromFloor
+// const elevatorOnSameFloorAsRequest = (elevator: Elevator, elevatorRequest: ElevatorRequest) => elevator.currFloor === elevatorRequest.destFloor
 
 // const elevatorGoingInSameDirectionAsRequest = (elevator: Elevator, elevatorRequest: ElevatorRequest) => elevator.status === ElevatorStatus.MOVING && elevator.direction === elevatorRequest.direction
 
@@ -49,7 +49,7 @@ export const getDirection = (currFloor = -1, destFloor = -1) : Direction => {
 }
 
 export const elevatorHeadingTowardsFloor = (elevator: Elevator, elevatorRequest: ElevatorRequest) : boolean => {
-  return elevator.currFloor <= elevatorRequest.fromFloor && elevatorRequest.fromFloor <= elevator.destFloor
+  return elevator.currFloor <= elevatorRequest.destFloor && elevatorRequest.destFloor <= elevator.destFloor
 }
 
 export const elevatorMoves = async ({ name }: Elevator) : Promise<void> => {

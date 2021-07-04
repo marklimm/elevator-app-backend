@@ -9,7 +9,7 @@ export enum Direction {
  * The request object for when the user requests that the elevator go to a destination floor
  */
 export interface ElevatorRequest {
-  fromFloor: number,
+  destFloor: number,
   direction: Direction
 }
 

@@ -72,7 +72,7 @@ export const makeElevatorRequest = async (personMakingElevatorRequest: Person) :
 
   const direction = personMakingElevatorRequest.currFloor < personMakingElevatorRequest.destFloor ? Direction.GOING_UP : Direction.GOING_DOWN
 
-  await addElevatorRequest({ fromFloor: personMakingElevatorRequest.currFloor, direction })
+  await addElevatorRequest({ destFloor: personMakingElevatorRequest.currFloor, direction })
 
   await _lock.acquire(PEOPLE_LOCK, () => {
     //  specify that the user is now waiting for the elevator
@@ -93,7 +93,7 @@ export const makeElevatorRequest = async (personMakingElevatorRequest: Person) :
 
 //     const direction = user.currFloor < user.destFloor ? Direction.GOING_UP : Direction.GOING_DOWN
 
-//     await addElevatorRequest({ fromFloor: user.currFloor, direction })
+//     await addElevatorRequest({ destFloor: user.currFloor, direction })
 
 //     //  specify that the user is now waiting for the elevator
 //     user.status = UserStatus.WAITING_FOR_ELEVATOR
