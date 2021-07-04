@@ -32,6 +32,9 @@ const chooseElevator = (elevatorRequest: ElevatorRequest) => {
   console.log('-- chooseElevator START --')
   const elevatorsArr = getElevatorsAsArray()
 
+  //  use Object.values() instead?
+  // Object.values(elevators)
+
   //  is there already an elevator that is heading in the direction of the requested floor?
   // const elevatorHeadingTowardsRequestAlready = elevatorsArr.find(elevator => elevatorHeadingTowardsFloor(elevator, elevatorRequest)
   // )

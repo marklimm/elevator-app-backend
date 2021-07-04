@@ -36,6 +36,24 @@ export const broadcastPersonRequestedElevator = (person: Person) : void => {
   _io.emit('person-update', personRequestedElevatorUpdate)
 }
 
+export const broadcastPersonPressesButton = (elevator: Elevator) : void => {
+  const elevatorReceivesDestination: ElevatorUpdate = {
+    type: ElevatorUpdateType.RECEIVED_DESTINATION,
+    people: elevator.people.map(p => ({
+      name: p.name,
+      personId: p.name
+    })),
+    elevator: {
+      elevatorId: elevator.name,
+      name: elevator.name
+    },
+    currFloor: elevator.currFloor,
+    destFloor: elevator.destFloor
+  }
+
+  _io.emit('elevator-update', elevatorReceivesDestination)
+}
+
 export const broadcastElevatorTakingRequest = (elevator: Elevator) : void => {
   const elevatorTakingRequest: ElevatorUpdate = {
     type: ElevatorUpdateType.TAKING_REQUEST,

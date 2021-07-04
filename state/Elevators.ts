@@ -1,5 +1,6 @@
 import AsyncLock from 'async-lock'
 import { Direction, Elevator, ElevatorRequest, Elevators, ElevatorStatus } from '../lib/types/Elevator'
+import { Person } from '../lib/types/Person'
 
 const ELEVATOR_LOCK = 'elevator-lock'
 
@@ -63,5 +64,31 @@ export const elevatorOpensDoors = async ({ name }: Elevator) : Promise<void> => 
   await _lock.acquire(ELEVATOR_LOCK, () => {
     const elevator = elevators[name]
     elevator.status = ElevatorStatus.DOORS_OPENING
+  })
+}
+
+export const getElevatorPickingUpPerson = async (person: Person) : Promise<Elevator | undefined> => {
+  const elevatorPickingUpPerson = getElevatorsAsArray().find(elevator => elevator.status === ElevatorStatus.DOORS_OPENING && elevator.currFloor === person.currFloor)
+
+  // await _lock.acquire(ELEVATOR_LOCK, () => {
+  //   const elevator = elevators[name]
+  //   elevator.status = ElevatorStatus.DOORS_OPENING
+  // })
+
+  return elevatorPickingUpPerson
+}
+
+export const giveElevatorADestination = async ({ name }: Elevator, person: Person) : Promise<void> => {
+  const elevator = elevators[name]
+
+  await _lock.acquire(ELEVATOR_LOCK, () => {
+    elevator.status = ElevatorStatus.MOVING
+    elevator.destFloor = person.destFloor
+    elevator.people = [
+      ...elevator.people,
+      person
+    ]
+
+    elevator.direction = elevator.currFloor < elevator.destFloor ? Direction.GOING_UP : Direction.GOING_DOWN
   })
 }

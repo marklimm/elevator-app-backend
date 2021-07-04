@@ -19,7 +19,8 @@ export enum ElevatorStatus {
   INACTIVE = 'inactive',
   MOVING = 'moving',
   READY = 'ready',
-  PERSON_ENTERING = 'person-entering',
+  // PERSON_ENTERING = 'person-entering',
+  RECEIVING_DESTINATION = 'receiving-destination'
 }
 
 export interface Elevator {

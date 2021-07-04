@@ -6,7 +6,7 @@ import { setConnectionListeners } from './ConnectionManager'
 import { setClientActionListeners } from './BuildingActionListeners'
 
 import { initializeBroadcaster } from './Broadcaster'
-import { initializeGameLoops } from '../state/GameLoops'
+import { initializeGameLoops } from './GameLoops'
 import { resetElevators } from '../state/Elevators'
 
 export const initSocketIO = (httpServer: Server) : void => {

@@ -37,9 +37,8 @@ export interface PersonDTO {
 export enum PersonUpdateType {
   NEWLY_SPAWNED = 'newly-spawned',
   REQUESTING_ELEVATOR = 'requesting-elevator',
-  ENTERED_THE_ELEVATOR = 'entered-the-elevator',
+  // ENTERED_THE_ELEVATOR = 'entered-the-elevator',
   IN_THE_ELEVATOR = 'in-the-elevator',
-  PRESSES_BUTTON = 'presses-button',
   LEFT_THE_ELEVATOR = 'left-the-elevator',
 }
 
@@ -47,6 +46,7 @@ export enum ElevatorUpdateType {
   TAKING_REQUEST = 'taking-request',
   ON_FLOOR = 'on-floor',
   OPENING_DOORS = 'opening-doors',
+  RECEIVED_DESTINATION = 'received-destination',
   CLOSING_DOORS = 'closing-doors',
   MOVING_TO_FLOOR = 'moving-to-floor',
 }

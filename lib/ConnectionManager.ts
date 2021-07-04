@@ -1,7 +1,7 @@
 import { Socket } from 'socket.io'
 import { NewConnectionBuildingResponse, OkOrError } from './types/EventPayloads'
 
-import { gameLoopManager } from '../state/GameLoops'
+import { gameLoopManager } from './GameLoops'
 import { buildingDetails } from '../state/Building'
 import { resetElevators } from '../state/Elevators'
 import { clearPeople } from '../state/People'
