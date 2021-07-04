@@ -1,3 +1,4 @@
+import { ElevatorStatus } from './EventPayloads'
 import { Person } from './Person'
 
 export enum Direction {
@@ -13,15 +14,15 @@ export interface ElevatorRequest {
   direction: Direction
 }
 
-export enum ElevatorStatus {
-  DOORS_CLOSING = 'doors-closing',
-  DOORS_OPENING = 'doors-opening',
-  INACTIVE = 'inactive',
-  MOVING = 'moving',
-  READY = 'ready',
-  // PERSON_ENTERING = 'person-entering',
-  RECEIVING_DESTINATION = 'receiving-destination'
-}
+// export enum ElevatorStatus {
+//   DOORS_CLOSING = 'doors-closing',
+//   DOORS_OPENING = 'doors-opening',
+//   INACTIVE = 'inactive',
+//   MOVING = 'moving',
+//   READY = 'ready',
+//   // PERSON_ENTERING = 'person-entering',
+//   RECEIVING_DESTINATION = 'receiving-destination'
+// }
 
 export interface Elevator {
   name: string

@@ -34,25 +34,27 @@ export interface PersonDTO {
   name: string
 }
 
-export enum PersonUpdateType {
+export enum PersonStatus {
   NEWLY_SPAWNED = 'newly-spawned',
-  REQUESTING_ELEVATOR = 'requesting-elevator',
-  // ENTERED_THE_ELEVATOR = 'entered-the-elevator',
+  WAITING_FOR_ELEVATOR = 'waiting-for-elevator',
+  ENTERED_THE_ELEVATOR = 'entered-the-elevator',
+  PRESSES_BUTTON = 'presses-button',
   IN_THE_ELEVATOR = 'in-the-elevator',
   LEFT_THE_ELEVATOR = 'left-the-elevator',
 }
 
-export enum ElevatorUpdateType {
-  TAKING_REQUEST = 'taking-request',
-  ON_FLOOR = 'on-floor',
-  OPENING_DOORS = 'opening-doors',
+export enum ElevatorStatus {
+  READY = 'ready',
+  RECEIVED_REQUEST = 'received-request',
+  DOORS_OPENING = 'doors-opening',
+  DOORS_CLOSING = 'doors-closing',
   RECEIVED_DESTINATION = 'received-destination',
-  CLOSING_DOORS = 'closing-doors',
   MOVING_TO_FLOOR = 'moving-to-floor',
+  INACTIVE = 'inactive',
 }
 
 export type PersonUpdate = {
-  type: PersonUpdateType
+  type: PersonStatus
 
   person: PersonDTO
   elevator?: ElevatorDTO
@@ -61,7 +63,7 @@ export type PersonUpdate = {
 }
 
 export type ElevatorUpdate = {
-  type: ElevatorUpdateType
+  type: ElevatorStatus
 
   people: PersonDTO[]
   elevator: ElevatorDTO
