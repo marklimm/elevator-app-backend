@@ -2,11 +2,11 @@ import AsyncLock from 'async-lock'
 import { getRandomFloor, getRandomName } from '../lib/Randomizer'
 import { buildingDetails } from './Building'
 
-import { addElevatorRequest } from './Elevators'
+import { addElevatorRequest } from './ElevatorRequests'
 
 import { People, Person, PersonStatus } from '../lib/types/Person'
 import { Direction } from '../lib/types/Elevator'
-import { broadcastPersonRequestedElevator } from './Broadcaster'
+import { broadcastPersonRequestedElevator } from '../lib/Broadcaster'
 
 // const numPeople = 500
 

@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 import { setConnectionListeners } from './ConnectionManager'
 import { setClientActionListeners } from './BuildingActionListeners'
 
-import { initializeBroadcaster } from '../state/Broadcaster'
+import { initializeBroadcaster } from './Broadcaster'
 import { initializeGameLoops } from '../state/GameLoops'
 import { resetElevators } from '../state/Elevators'
 

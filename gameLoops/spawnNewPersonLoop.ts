@@ -1,5 +1,5 @@
 import { GameLoopIntervals } from '../lib/types/GameLoop'
-import { broadcastNewPersonSpawned } from '../state/Broadcaster'
+import { broadcastNewPersonSpawned } from '../lib/Broadcaster'
 import { getNumPeople, spawnNewPerson } from '../state/People'
 import { personLoop } from './personLoop'
 

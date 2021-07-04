@@ -1,5 +1,5 @@
 
-import { broadcastElevatorMoving, broadcastElevatorOpensDoors } from '../state/Broadcaster'
+import { broadcastElevatorMoving, broadcastElevatorOpensDoors } from '../lib/Broadcaster'
 import { elevatorMoves, elevatorOpensDoors, elevators, elevatorShouldOpenDoors } from '../state/Elevators'
 import { Elevator, ElevatorStatus } from '../lib/types/Elevator'
 
@@ -9,6 +9,7 @@ export const elevatorLoop = async ({ name }: Elevator) : Promise<void> => {
   const elevator = elevators[name]
   // console.log(`elevator loop for ${elevator.name}`)
 
+  console.log('-- elevator status', elevator.status)
   //  exit this function if the elevator shouldn't open its doors
   if (cantOpenDoorsStatuses.indexOf(elevator.status) > -1) {
     // console.log('exiting because elevator.status', elevator.status)
