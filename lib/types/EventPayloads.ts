@@ -12,7 +12,6 @@ export interface ResponseStatus {
 }
 
 export interface BuildingDetails {
-  elevatorNames: string[]
   name: string
   numFloors: number
   yearBuilt: number

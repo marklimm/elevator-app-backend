@@ -1,7 +1,7 @@
 
 import { Server as SocketIOServer } from 'socket.io'
 
-import { Elevator } from '../types/Elevator'
+import { Elevator } from '../state/Elevator'
 import { ElevatorUpdate, ElevatorStatus } from '../types/EventPayloads'
 
 export class ElevatorBroadcaster {

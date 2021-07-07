@@ -1,20 +1,26 @@
 import { Server as SocketIOServer, Socket } from 'socket.io'
 import { NewConnectionBuildingResponse, OkOrError } from './types/EventPayloads'
 
-import { GameLoopManager } from '../gameLoops/GameLoopManager'
-import { buildingDetails } from '../state/Building'
-import { resetElevators } from '../state/Elevators'
-import { clearPeople } from '../state/People'
+import { GameLoopManager } from './gameLoops/GameLoopManager'
+import { StateManager } from './StateManager'
+import AsyncLock from 'async-lock'
 
 export class ConnectionManager {
   private _numClients: number
 
+  private _stateManager: StateManager
+
   private _gameLoopManager: GameLoopManager
 
-  constructor (io: SocketIOServer) {
+  private _lock: AsyncLock
+
+  constructor (io: SocketIOServer, stateManager: StateManager, lock: AsyncLock) {
     this._numClients = 0
 
-    this._gameLoopManager = new GameLoopManager(io)
+    this._stateManager = stateManager
+    this._lock = lock
+
+    this._gameLoopManager = new GameLoopManager(io, stateManager, lock)
   }
 
   private onNewConnection (socket: Socket) : void {
@@ -26,11 +32,14 @@ export class ConnectionManager {
     this._numClients += 1
     console.log(`New user connected - there are now ${this._numClients} client(s) connected`)
 
-    // const numPeople = getNumPeople()
-    // console.log(`numPeople - ${numPeople}`)
+    const building = this._stateManager.building
 
     const newConnectionResponse: NewConnectionBuildingResponse = {
-      ...buildingDetails,
+
+      name: building.name,
+      numFloors: building.numFloors,
+      yearBuilt: building.yearBuilt,
+
       status: OkOrError.Ok,
       message: 'Successfully connected!'
     }
@@ -49,12 +58,6 @@ export class ConnectionManager {
       //  stop all the intervals/game loops since no more clients are connected
 
       this._gameLoopManager.stop()
-
-      //  delete any people that might currently be in state
-      clearPeople()
-
-      //  reset the elevators back to their initial state (on the first floor and ready to take a request)
-      resetElevators()
     }
   }
 

@@ -1,11 +1,12 @@
 import { Server } from 'http'
 import { Server as SocketIOServer, Socket } from 'socket.io'
 import dotenv from 'dotenv'
+import AsyncLock from 'async-lock'
 
 import { ConnectionManager } from './ConnectionManager'
 import { setClientActionListeners } from './BuildingActionListeners'
 
-import { resetElevators } from '../state/Elevators'
+import { StateManager } from './StateManager'
 
 import { PersonBroadcaster } from './broadcasts/PersonBroadcaster'
 import { ElevatorBroadcaster } from './broadcasts/ElevatorBroadcaster'
@@ -26,9 +27,12 @@ export const initSocketIO = (httpServer: Server) : void => {
 
   const io = new SocketIOServer(httpServer, options)
 
-  resetElevators()
+  //  the single AsyncLock in the project
+  const lock = new AsyncLock()
 
-  const connectionManager = new ConnectionManager(io)
+  const stateManager = new StateManager(lock)
+
+  const connectionManager = new ConnectionManager(io, stateManager, lock)
 
   elevatorBroadcaster = new ElevatorBroadcaster(io)
   personBroadcaster = new PersonBroadcaster(io)

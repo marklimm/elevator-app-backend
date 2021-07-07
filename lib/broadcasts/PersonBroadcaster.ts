@@ -1,7 +1,7 @@
 
 import { Server as SocketIOServer } from 'socket.io'
 
-import { Person } from '../types/Person'
+import { Person } from '../state/Person'
 import { PersonUpdate, PersonStatus } from '../types/EventPayloads'
 
 export class PersonBroadcaster {
