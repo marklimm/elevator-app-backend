@@ -7,6 +7,7 @@ import { GameLoopIntervals } from '../types/types'
 import { stateManagerLoop } from './stateManagerLoop'
 import { StateManager } from '../StateManager'
 import AsyncLock from 'async-lock'
+import { elevatorBroadcaster } from '../socketIOSetup'
 
 export class GameLoopManager {
   private _io: SocketIOServer
@@ -45,6 +46,8 @@ export class GameLoopManager {
 
     elevators.forEach(elevator => {
       this.intervalsObj[`${elevator.name}`] = setInterval(elevatorLoop.bind(this, elevator, this._lock), 1000)
+
+      elevatorBroadcaster.broadcastElevatorReady(elevator)
     })
 
     this.intervalsObj['state-manager'] = setInterval(stateManagerLoop.bind(this, this._stateManager), 2500)

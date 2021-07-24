@@ -77,7 +77,7 @@ export class StateManager {
   }
 
   public async findElevatorToTakeRequest () : Promise<Elevator | void> {
-    console.log('-- START -- findElevatorToTakeRequest')
+    // console.log('-- START -- findElevatorToTakeRequest')
 
     //  the ELEVATOR_REQUEST_LOCK has already been taken before this function is called
 
@@ -106,7 +106,9 @@ export class StateManager {
 
       //  take the lock for the specific elevator
       const updatedElevator = await this._lock.acquire(elevatorTakingRequest.lockName, async () => {
-        return elevatorTakingRequest.elevatorTakesRequest(elevatorRequest)
+        elevatorTakingRequest.takeRequest(elevatorRequest)
+
+        return elevatorTakingRequest
       })
 
       console.log('updatedElevator', updatedElevator)
@@ -114,7 +116,7 @@ export class StateManager {
       return updatedElevator
     })
 
-    console.log('-- END -- findElevatorToTakeRequest')
+    // console.log('-- END -- findElevatorToTakeRequest')
 
     return elevatorTakingRequest
   }

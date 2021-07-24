@@ -66,19 +66,23 @@ export class Elevator {
     this._status = ElevatorStatus.DOORS_OPENING
   }
 
-  public elevatorTakesRequest (elevatorRequest: ElevatorRequest) : void {
+  public takeRequest (elevatorRequest: ElevatorRequest) : void {
     //  I feel like there would be more complicated logic if an elevator is stopping mid-way to also answer a new request that is going in the same direction that the elevator is already going
 
     this._destFloor = elevatorRequest.destFloor
+    this._status = ElevatorStatus.RECEIVED_REQUEST
+  }
+
+  public startMoving () : void {
     this._status = ElevatorStatus.MOVING_TO_FLOOR
   }
 
-  public elevatorGetsRiderAndDestination (person: Person) : void {
-    this._status = ElevatorStatus.MOVING_TO_FLOOR
-    this._destFloor = person.destFloor
-    this._people = [
-      ...this._people,
-      person
-    ]
-  }
+  // public elevatorGetsRiderAndDestination (person: Person) : void {
+  //   this._status = ElevatorStatus.MOVING_TO_FLOOR
+  //   this._destFloor = person.destFloor
+  //   this._people = [
+  //     ...this._people,
+  //     person
+  //   ]
+  // }
 }

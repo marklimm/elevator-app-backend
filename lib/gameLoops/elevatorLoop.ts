@@ -21,6 +21,12 @@ export const elevatorLoop = async (elevator: Elevator, lock: AsyncLock) : Promis
       return
     }
 
+    if (elevator.status === ElevatorStatus.RECEIVED_REQUEST) {
+      elevatorBroadcaster.broadcastElevatorTakingRequest(elevator)
+
+      elevator.startMoving()
+    }
+
     if (elevator.status === ElevatorStatus.MOVING_TO_FLOOR) {
       elevator.movesToFloor()
 
