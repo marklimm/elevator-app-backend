@@ -4,7 +4,7 @@ import { Server as SocketIOServer } from 'socket.io'
 import { elevatorLoop } from './elevatorLoop'
 import { spawnNewPersonLoop } from './spawnNewPersonLoop'
 import { GameLoopIntervals } from '../types/types'
-import { stateManagerLoop } from './stateManagerLoop'
+import { elevatorManagerLoop } from './elevatorManagerLoop'
 import { StateManager } from '../StateManager'
 import AsyncLock from 'async-lock'
 import { elevatorBroadcaster } from '../socketIOSetup'
@@ -37,10 +37,6 @@ export class GameLoopManager {
   }
 
   private async startLoops () {
-    //  this loop spawns new users, and whenever a new user is spawned a personLoop is created
-    //  this seems like a code smell, it seems like there should be a more elegant way of setting this up, but I haven't found that solution yet
-    this.intervalsObj['spawn-new-person-loop'] = setInterval(spawnNewPersonLoop.bind(this, this.intervalsObj, this._stateManager, this._lock), 3000)
-
     //  getting the elevators requires getting the Elevators lock, which is why this is a promise (that needs to be called with await)
     const elevators = await this._stateManager.getElevators()
 
@@ -50,7 +46,11 @@ export class GameLoopManager {
       elevatorBroadcaster.broadcastElevatorReady(elevator)
     })
 
-    this.intervalsObj['state-manager'] = setInterval(stateManagerLoop.bind(this, this._stateManager), 2500)
+    this.intervalsObj['elevator-manager-loop'] = setInterval(elevatorManagerLoop.bind(this, this._stateManager), 2500)
+
+    //  this loop spawns new users, and whenever a new user is spawned a personLoop is created
+    //  this seems like a code smell, it seems like there should be a more elegant way of setting this up, but I haven't found that solution yet
+    this.intervalsObj['spawn-new-person-loop'] = setInterval(spawnNewPersonLoop.bind(this, this.intervalsObj, this._stateManager, this._lock), 3000)
   }
 
   public start () : void {

@@ -4,6 +4,8 @@ import { ElevatorStatus } from '../types/EventPayloads'
 import { elevatorBroadcaster } from '../socketIOSetup'
 import { Elevator } from '../state/Elevator'
 
+//  this elevatorLoop is responsible for (1) changing the status of the Elevator and (2) broadcasting updates to the client using `elevatorBroadcaster`
+
 export const elevatorLoop = async (elevator: Elevator, lock: AsyncLock) : Promise<void> => {
   //  take the lock for the specific elevator
   await lock.acquire(elevator.lockName, async () => {
@@ -32,7 +34,5 @@ export const elevatorLoop = async (elevator: Elevator, lock: AsyncLock) : Promis
 
       elevatorBroadcaster.broadcastElevatorMoving(elevator)
     }
-
-    //  the ElevatorStatus.READY status is handled by the stateManagerLoop
   })
 }

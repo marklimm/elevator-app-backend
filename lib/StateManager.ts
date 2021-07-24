@@ -69,11 +69,6 @@ export class StateManager {
     await this._lock.acquire(ElevatorRequests.ELEVATOR_REQUESTS_LOCK, () => {
       this._elevatorRequests.addElevatorRequest(elevatorRequest)
     })
-
-    await this._lock.acquire(personCallingElevator.lockName, () => {
-      //  specify that the user is now waiting for the elevator
-      personCallingElevator.status = PersonStatus.WAITING_FOR_ELEVATOR
-    })
   }
 
   public async findElevatorToTakeRequest () : Promise<Elevator | void> {
@@ -85,7 +80,9 @@ export class StateManager {
     const elevatorTakingRequest = await this._lock.acquire(ElevatorRequests.ELEVATOR_REQUESTS_LOCK, async () => {
       const elevatorRequest = await this._elevatorRequests.getElevatorRequest()
 
-      if (!elevatorRequest) { return }
+      if (!elevatorRequest) {
+        return
+      }
 
       console.log('elevatorRequest to be processed', elevatorRequest)
 
