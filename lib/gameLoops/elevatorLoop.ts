@@ -13,6 +13,12 @@ export const elevatorLoop = async (elevator: Elevator, lock: AsyncLock) : Promis
 
     // const cantOpenDoorsStatuses = [ElevatorStatus.INACTIVE, ElevatorStatus.DOORS_CLOSING, ElevatorStatus.DOORS_OPENING]
 
+    if (elevator.status === ElevatorStatus.RECEIVED_REQUEST) {
+      elevatorBroadcaster.broadcastElevatorTakingRequest(elevator)
+
+      elevator.startMoving()
+    }
+
     if (elevator.shouldOpenDoors()) {
       //  elevator has reached its destination, open the doors
 
@@ -21,12 +27,6 @@ export const elevatorLoop = async (elevator: Elevator, lock: AsyncLock) : Promis
       elevatorBroadcaster.broadcastElevatorOpensDoors(elevator)
 
       return
-    }
-
-    if (elevator.status === ElevatorStatus.RECEIVED_REQUEST) {
-      elevatorBroadcaster.broadcastElevatorTakingRequest(elevator)
-
-      elevator.startMoving()
     }
 
     if (elevator.status === ElevatorStatus.MOVING_TO_FLOOR) {
