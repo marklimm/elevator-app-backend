@@ -25,9 +25,9 @@ export class ElevatorBroadcaster {
     this._io.emit('elevator-update', elevatorReady)
   }
 
-  public broadcastElevatorTakingRequest (elevator: Elevator) : void {
+  public broadcastElevatorTookRequest (elevator: Elevator) : void {
     const elevatorReceivedRequest: ElevatorUpdate = {
-      type: ElevatorStatus.RECEIVED_REQUEST,
+      type: ElevatorStatus.TOOK_REQUEST,
       people: [],
       elevator: {
         elevatorId: elevator.name,

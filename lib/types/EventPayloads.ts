@@ -44,7 +44,7 @@ export enum PersonStatus {
 
 export enum ElevatorStatus {
   READY = 'ready',
-  RECEIVED_REQUEST = 'received-request',
+  TOOK_REQUEST = 'took-request',
   DOORS_OPENING = 'doors-opening',
   DOORS_CLOSING = 'doors-closing',
   RECEIVED_DESTINATION = 'received-destination',

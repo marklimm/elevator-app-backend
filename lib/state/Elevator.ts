@@ -70,7 +70,7 @@ export class Elevator {
     //  I feel like there would be more complicated logic if an elevator is stopping mid-way to also answer a new request that is going in the same direction that the elevator is already going
 
     this._destFloor = elevatorRequest.destFloor
-    this._status = ElevatorStatus.RECEIVED_REQUEST
+    this._status = ElevatorStatus.TOOK_REQUEST
   }
 
   public startMoving () : void {
