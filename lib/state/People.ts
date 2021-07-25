@@ -17,23 +17,15 @@ export class People {
    * @returns
    */
   public get numPeople () : number {
-    // const numPeople = await this._lock.acquire(PEOPLE_LOCK, () => {
     return this._people.length
-    // })
-
-    // return numPeople
   }
 
   /**
-   * Returns the number of people who are currently interacting with elevators
+   * Returns the names that are already being used (and that we don't want to use again to avoid duplicates)
    * @returns
    */
   public get usedNames () : string[] {
-    // const usedNames = await this._lock.acquire(PEOPLE_LOCK, () => {
     return this._people.map(person => person.name)
-    // })
-
-    // return usedNames
   }
 
   /**
@@ -44,8 +36,7 @@ export class People {
   }
 
   public addPerson (numFloors = 10) : Person | undefined {
-    //  don't add more people if there's already one user
-
+    //  don't add more than 2 people for now
     if (this.numPeople > 1) { return }
 
     const name = getRandomName(this.usedNames)

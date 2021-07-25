@@ -1,15 +1,17 @@
 import AsyncLock from 'async-lock'
 
-import { Direction } from './types/types'
-import { Elevator } from './state/Elevator'
-import { ElevatorRequests } from './state/ElevatorRequests'
-import { Elevators } from './state/Elevators'
-import { People } from './state/People'
-import { PersonStatus } from './types/EventPayloads'
+import { Direction } from '../types/types'
+import { Elevator } from './Elevator'
+import { ElevatorRequests } from './ElevatorRequests'
+import { Elevators } from './Elevators'
+import { People } from './People'
 
-import { Person } from './state/Person'
-import { Building } from './state/Building'
+import { Person } from './Person'
+import { Building } from './Building'
 
+/**
+ * This class is the single source of truth for the state of the application.  It contains methods to read and modify state
+ */
 export class StateManager {
   private _elevators: Elevators
   private _people: People

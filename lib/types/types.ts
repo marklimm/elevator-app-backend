@@ -1,3 +1,5 @@
+//  These types are only used on the server-side
+
 export interface GameLoopIntervals {
   [key: string]: NodeJS.Timeout
 }
@@ -14,18 +16,3 @@ export interface ElevatorRequest {
   destFloor: number,
   direction: Direction
 }
-
-// export interface Person {
-//   name: string,
-//   currFloor: number
-//   destFloor: number
-//   status: PersonStatus
-// }
-
-// export interface Elevator {
-//   name: string
-//   currFloor: number
-//   destFloor: number
-//   people: Person[]
-//   status: ElevatorStatus,
-// }

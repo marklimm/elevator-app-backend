@@ -1,4 +1,4 @@
-//  these are types that are shared with the frontend.  These types have to do with payloads that get broadcasted to the clients
+//  The types in this file define a shared "contract" between the frontend and backend.  These types are the statuses and payloads that get broadcasted from the server to the clients
 
 export enum OkOrError {
   Ok = 'ok',

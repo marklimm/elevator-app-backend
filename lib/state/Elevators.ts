@@ -2,7 +2,6 @@ import { Elevator } from './Elevator'
 import { ElevatorStatus } from '../types/EventPayloads'
 
 export class Elevators {
-  //  try storing as an array of Elevator[] instead of as an object
   private _elevators: Elevator[]
 
   public static ELEVATORS_LOCK = 'elevators-lock'
@@ -28,13 +27,13 @@ export class Elevators {
     ]
   }
 
-  public getElevatorPickingUpPerson = (personOnFloor: number) : Elevator | undefined => {
-    // const elevatorPickingUpPerson = await this._lock.acquire(Elevators.ELEVATORS_LOCK, () => {
-    return this._elevators.find(elevator => elevator.currFloor === personOnFloor && elevator.status === ElevatorStatus.DOORS_OPENING)
-    // })
+  // public getElevatorPickingUpPerson = (personOnFloor: number) : Elevator | undefined => {
+  //   // const elevatorPickingUpPerson = await this._lock.acquire(Elevators.ELEVATORS_LOCK, () => {
+  //   return this._elevators.find(elevator => elevator.currFloor === personOnFloor && elevator.status === ElevatorStatus.DOORS_OPENING)
+  //   // })
 
-    // return elevatorPickingUpPerson
-  }
+  //   // return elevatorPickingUpPerson
+  // }
 
   private getClosestReadyElevator (destFloor : number) : Elevator | null {
     const readyElevators = this._elevators.filter(elevator => {
@@ -84,5 +83,3 @@ export class Elevators {
     return closestReadyElevator
   }
 }
-
-// export const elevators = new Elevators()

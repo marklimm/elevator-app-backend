@@ -1,6 +1,6 @@
 
 /**
- * This function is used to return a value that changes over time, and is used as part of testing the "game loop"
+ * This function is not used anymore.  It returns a value that changes over time
  * @returns
  */
 export const getChangeByAmount = () : number => {
