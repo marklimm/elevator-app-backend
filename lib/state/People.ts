@@ -1,5 +1,5 @@
 import { Person } from './Person'
-import { getRandomFloor, getRandomName } from '../Randomizer'
+import { getRandomFloor, getRandomName } from '../randomizer/Randomizer'
 
 export class People {
   private _people: Person[]

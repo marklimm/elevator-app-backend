@@ -1,7 +1,7 @@
 import express, { Application, Request, Response } from 'express'
 import { createServer } from 'http'
 
-import { initSocketIO } from './lib/socketIOSetup'
+import { SocketIOSetup } from './lib/socketio/SocketIOSetup'
 
 //  started to create this file following https://blog.logrocket.com/typescript-with-node-js-and-express/
 
@@ -18,4 +18,4 @@ httpServer.listen(PORT, () => {
 })
 
 //  setup the server-side socketio functions
-initSocketIO(httpServer)
+SocketIOSetup.doSetup(httpServer)

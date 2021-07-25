@@ -1,10 +1,10 @@
 import { Server as SocketIOServer, Socket } from 'socket.io'
-import { NewConnectionBuildingResponse, OkOrError } from './types/EventPayloads'
+import { NewConnectionBuildingResponse, OkOrError } from '../types/EventPayloads'
 
-import { GameLoopManager } from './gameLoops/GameLoopManager'
-import { StateManager } from './state/StateManager'
+import { GameLoopManager } from '../gameLoops/GameLoopManager'
+import { StateManager } from '../state/StateManager'
 import AsyncLock from 'async-lock'
-import { Broadcasters } from './broadcasters/Broadcasters'
+import { Broadcasters } from '../broadcasters/Broadcasters'
 
 /**
  * This class manages client connections and stores the number of clients that are currently subscribing to events that will be pushed out from our socket io server
