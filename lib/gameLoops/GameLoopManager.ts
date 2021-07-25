@@ -2,12 +2,14 @@ import { Server as SocketIOServer } from 'socket.io'
 import AsyncLock from 'async-lock'
 
 import { elevatorLoop } from './elevatorLoop'
-import { spawnNewPersonLoop } from './spawnNewPersonLoop'
 import { GameLoopIntervals } from '../types/types'
 import { elevatorManagerLoop } from './elevatorManagerLoop'
 import { StateManager } from '../state/StateManager'
 
+import { Person } from '../state/Person'
+
 import { Broadcasters } from '../broadcasters/Broadcasters'
+import { PersonLoopCreator } from './PersonLoopCreator'
 
 /**
  * This class owns the asynchronous loops for the application (elevator loop, elevator manager loop and new person spawn loop)
@@ -31,6 +33,8 @@ export class GameLoopManager {
   private _stateManager: StateManager
   private _broadcasters: Broadcasters
 
+  private _personLoopCreator: PersonLoopCreator
+
   constructor (io: SocketIOServer, stateManager: StateManager, broadcasters: Broadcasters, lock: AsyncLock) {
     this._io = io
     this._active = false
@@ -39,6 +43,8 @@ export class GameLoopManager {
 
     this._stateManager = stateManager
     this._broadcasters = broadcasters
+
+    this._personLoopCreator = new PersonLoopCreator(this._stateManager, this.intervalsObj, this._broadcasters.personBroadcaster, this._lock)
   }
 
   private async startLoops () {
@@ -54,8 +60,10 @@ export class GameLoopManager {
     this.intervalsObj['elevator-manager-loop'] = setInterval(elevatorManagerLoop.bind(this, this._stateManager), 2500)
 
     //  this loop spawns new users, and whenever a new user is spawned a personLoop is created
-    //  this seems like a code smell, it seems like there should be a more elegant way of setting this up, but I haven't found that solution yet
-    this.intervalsObj['spawn-new-person-loop'] = setInterval(spawnNewPersonLoop.bind(this, this.intervalsObj, this._stateManager, this._broadcasters.personBroadcaster, this._lock), 3000)
+
+    this.intervalsObj['spawn-new-person-loop'] = setInterval(async () => {
+      await this._personLoopCreator.spawnNewPersonLoop()
+    }, 10000)
   }
 
   public start () : void {
@@ -76,5 +84,17 @@ export class GameLoopManager {
 
   get areRunning () : boolean {
     return this._active
+  }
+
+  /**
+   * Spawn a new person by running spawnNewPersonLoop() once
+   */
+  public async spawnNewPerson (newPersonName = 'New Person') : Promise<Person | null> {
+    console.log('calling spawnNewPersonLoop()')
+
+    //  call spawnNewPersonLoop() to create a new person
+    const newPerson = await this._personLoopCreator.spawnNewPersonLoop(newPersonName)
+
+    return newPerson
   }
 }
