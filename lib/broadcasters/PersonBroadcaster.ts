@@ -29,8 +29,8 @@ export class PersonBroadcaster {
   }
 
   public broadcastPersonRequestedElevator (person: Person) : void {
-    const personWaitingForElevator: PersonUpdate = {
-      type: PersonStatus.WAITING_FOR_ELEVATOR,
+    const personWhoRequestedElevator: PersonUpdate = {
+      type: PersonStatus.REQUESTED_ELEVATOR,
       person: {
         personId: person.name,
         name: person.name
@@ -39,7 +39,7 @@ export class PersonBroadcaster {
       destFloor: person.destFloor
     }
 
-    this._io.emit('person-update', personWaitingForElevator)
+    this._io.emit('person-update', personWhoRequestedElevator)
   }
 
   public broadcastPersonEnteredElevator (person: Person, elevator: Elevator) : void {

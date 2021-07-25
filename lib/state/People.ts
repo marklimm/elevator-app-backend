@@ -35,15 +35,15 @@ export class People {
     this._people = []
   }
 
-  public addPerson (numFloors = 10) : Person | undefined {
-    //  don't add more than 2 people for now
-    if (this.numPeople > 1) { return }
+  public addPerson (newPersonName?: string, numFloors = 10) : Person {
+    if (!newPersonName) {
+      newPersonName = getRandomName(this.usedNames)
+    }
 
-    const name = getRandomName(this.usedNames)
     const currFloor = getRandomFloor(numFloors)
     const destFloor = getRandomFloor(numFloors, currFloor)
 
-    const newPerson = new Person(name, currFloor, destFloor)
+    const newPerson = new Person(newPersonName, currFloor, destFloor)
 
     console.log(`${newPerson.name} was just spawned`)
 

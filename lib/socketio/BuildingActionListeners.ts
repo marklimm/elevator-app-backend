@@ -2,6 +2,8 @@
 // I disabled `node/no-callback-literal` because the callback() below is not a nodejs callback function that expects to pass an error as the first parameter
 
 import { Socket } from 'socket.io'
+import { GameLoopManager } from '../gameLoops/GameLoopManager'
+import { ClientCommands, PersonStatus, PersonUpdate } from '../types/EventPayloads'
 
 // import { DECREASE_PEOPLE, INCREASE_PEOPLE, OkOrError, StatusUpdateResponse } from './BuildingActions.exclude'
 // import { addPeople, getNumPeople, removePeople } from '../state/People'
@@ -10,21 +12,28 @@ import { Socket } from 'socket.io'
   * This function defines listeners for the real-time messages sent by the clients
   * @param socket
   */
-export const setClientActionListeners = (socket: Socket) : void => {
+export const setClientActionListeners = (socket: Socket, gameLoopManager: GameLoopManager) : void => {
   //  using socket just to resolve the linter error
   console.log('socket.id', socket.id)
 
-  // socket.on(REQUEST_ELEVATOR, (destFloor, callback) => {
-  //   addElevatorRequest({ destFloor })
+  socket.on(ClientCommands.SPAWN_NEW_PERSON, async (newPersonName, callback) => {
+    console.log('newPersonName', newPersonName)
 
-  //   const elevatorRequestResponse: ElevatorRequestResponse = {
-  //     destFloor,
-  //     status: OkOrError.Ok,
-  //     message: `We have received your request to go to floor ${destFloor}.  An elevator will be with you shortly!`
-  //   }
+    const newPerson = await gameLoopManager.spawnNewPerson(newPersonName)
 
-  //   callback(elevatorRequestResponse)
-  // })
+    if (!newPerson) { return }
+
+    const newPersonSpawnedResponse: PersonUpdate = {
+      type: PersonStatus.NEWLY_SPAWNED,
+      person: {
+        personId: newPerson.name,
+        name: newPerson.name
+      },
+      currFloor: newPerson.currFloor
+    }
+
+    callback(newPersonSpawnedResponse)
+  })
 
   // socket.on(INCREASE_PEOPLE, (increaseBy, callback) => {
   //   addPeople(increaseBy)

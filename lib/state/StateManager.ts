@@ -29,6 +29,10 @@ export class StateManager {
     this._lock = lock
   }
 
+  public get numPeople () : number {
+    return this._people.numPeople
+  }
+
   public async getElevators () : Promise<Elevator[]> {
     const elevators = await this._lock.acquire(Elevators.ELEVATORS_LOCK, async () => {
       return this._elevators.elevators
@@ -54,10 +58,10 @@ export class StateManager {
     })
   }
 
-  public async addToPeople () : Promise<Person | undefined> {
+  public async addToPeople (newPersonName?: string) : Promise<Person> {
     //  get the people lock
     const newPerson = await this._lock.acquire(People.PEOPLE_LOCK, async () => {
-      return this._people.addPerson(this.building.numFloors)
+      return this._people.addPerson(newPersonName, this.building.numFloors)
     })
 
     return newPerson

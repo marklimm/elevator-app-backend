@@ -3,8 +3,6 @@ import { NewConnectionBuildingResponse, OkOrError } from '../types/EventPayloads
 
 import { GameLoopManager } from '../gameLoops/GameLoopManager'
 import { StateManager } from '../state/StateManager'
-import AsyncLock from 'async-lock'
-import { Broadcasters } from '../broadcasters/Broadcasters'
 
 /**
  * This class manages client connections and stores the number of clients that are currently subscribing to events that will be pushed out from our socket io server
@@ -16,15 +14,12 @@ export class ConnectionManager {
 
   private _gameLoopManager: GameLoopManager
 
-  private _lock: AsyncLock
-
-  constructor (io: SocketIOServer, stateManager: StateManager, broadcasters: Broadcasters, lock: AsyncLock) {
+  constructor (io: SocketIOServer, stateManager: StateManager, gameLoopManager: GameLoopManager) {
     this._numClients = 0
 
     this._stateManager = stateManager
-    this._lock = lock
 
-    this._gameLoopManager = new GameLoopManager(io, stateManager, broadcasters, lock)
+    this._gameLoopManager = gameLoopManager
   }
 
   private onNewConnection (socket: Socket) : void {
@@ -38,6 +33,7 @@ export class ConnectionManager {
 
     const building = this._stateManager.building
 
+    //  I feel like I might want to re-evaluate how this initial information is sent
     const newConnectionResponse: NewConnectionBuildingResponse = {
 
       name: building.name,
