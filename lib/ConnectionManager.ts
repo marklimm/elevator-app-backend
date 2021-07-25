@@ -2,9 +2,13 @@ import { Server as SocketIOServer, Socket } from 'socket.io'
 import { NewConnectionBuildingResponse, OkOrError } from './types/EventPayloads'
 
 import { GameLoopManager } from './gameLoops/GameLoopManager'
-import { StateManager } from './StateManager'
+import { StateManager } from './state/StateManager'
 import AsyncLock from 'async-lock'
+import { Broadcasters } from './broadcasters/Broadcasters'
 
+/**
+ * This class manages client connections and stores the number of clients that are currently subscribing to events that will be pushed out from our socket io server
+ */
 export class ConnectionManager {
   private _numClients: number
 
@@ -14,13 +18,13 @@ export class ConnectionManager {
 
   private _lock: AsyncLock
 
-  constructor (io: SocketIOServer, stateManager: StateManager, lock: AsyncLock) {
+  constructor (io: SocketIOServer, stateManager: StateManager, broadcasters: Broadcasters, lock: AsyncLock) {
     this._numClients = 0
 
     this._stateManager = stateManager
     this._lock = lock
 
-    this._gameLoopManager = new GameLoopManager(io, stateManager, lock)
+    this._gameLoopManager = new GameLoopManager(io, stateManager, broadcasters, lock)
   }
 
   private onNewConnection (socket: Socket) : void {

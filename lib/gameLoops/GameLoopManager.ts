@@ -1,14 +1,17 @@
 import { Server as SocketIOServer } from 'socket.io'
+import AsyncLock from 'async-lock'
 
-// import { statusLoop } from './statusLoop'
 import { elevatorLoop } from './elevatorLoop'
 import { spawnNewPersonLoop } from './spawnNewPersonLoop'
 import { GameLoopIntervals } from '../types/types'
 import { elevatorManagerLoop } from './elevatorManagerLoop'
-import { StateManager } from '../StateManager'
-import AsyncLock from 'async-lock'
-import { elevatorBroadcaster } from '../socketIOSetup'
+import { StateManager } from '../state/StateManager'
 
+import { Broadcasters } from '../broadcasters/Broadcasters'
+
+/**
+ * This class owns the asynchronous loops for the application (elevator loop, elevator manager loop and new person spawn loop)
+ */
 export class GameLoopManager {
   private _io: SocketIOServer
 
@@ -26,14 +29,16 @@ export class GameLoopManager {
   private _lock: AsyncLock
 
   private _stateManager: StateManager
+  private _broadcasters: Broadcasters
 
-  constructor (io: SocketIOServer, stateManager: StateManager, lock: AsyncLock) {
+  constructor (io: SocketIOServer, stateManager: StateManager, broadcasters: Broadcasters, lock: AsyncLock) {
     this._io = io
     this._active = false
 
     this._lock = lock
 
     this._stateManager = stateManager
+    this._broadcasters = broadcasters
   }
 
   private async startLoops () {
@@ -41,16 +46,16 @@ export class GameLoopManager {
     const elevators = await this._stateManager.getElevators()
 
     elevators.forEach(elevator => {
-      this.intervalsObj[`${elevator.name}`] = setInterval(elevatorLoop.bind(this, elevator, this._lock), 1000)
+      this.intervalsObj[`${elevator.name}`] = setInterval(elevatorLoop.bind(this, elevator, this._broadcasters.elevatorBroadcaster, this._lock), 1000)
 
-      elevatorBroadcaster.broadcastElevatorReady(elevator)
+      this._broadcasters.elevatorBroadcaster.broadcastElevatorReady(elevator)
     })
 
     this.intervalsObj['elevator-manager-loop'] = setInterval(elevatorManagerLoop.bind(this, this._stateManager), 2500)
 
     //  this loop spawns new users, and whenever a new user is spawned a personLoop is created
     //  this seems like a code smell, it seems like there should be a more elegant way of setting this up, but I haven't found that solution yet
-    this.intervalsObj['spawn-new-person-loop'] = setInterval(spawnNewPersonLoop.bind(this, this.intervalsObj, this._stateManager, this._lock), 3000)
+    this.intervalsObj['spawn-new-person-loop'] = setInterval(spawnNewPersonLoop.bind(this, this.intervalsObj, this._stateManager, this._broadcasters.personBroadcaster, this._lock), 3000)
   }
 
   public start () : void {

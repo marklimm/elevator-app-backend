@@ -2,28 +2,30 @@ import AsyncLock from 'async-lock'
 
 import { PersonStatus } from '../types/EventPayloads'
 
-import { personBroadcaster } from '../socketIOSetup'
-
 import { Person } from '../state/Person'
-import { StateManager } from '../StateManager'
+import { StateManager } from '../state/StateManager'
+import { PersonBroadcaster } from '../broadcasters/PersonBroadcaster'
 
-//  this personLoop is responsible for (1) changing the status of the Person and (2) broadcasting updates to the client using `personBroadcaster`
-
-export const personLoop = async (person: Person, stateManager: StateManager, lock: AsyncLock) : Promise<void> => {
+/**
+ * This personLoop represents the actions of an individual person.  It (1) both makes and listens for changes in the Person status and (2) broadcasts updates to the client using `personBroadcaster`
+ * @param person
+ * @param stateManager
+ * @param lock
+ */
+export const personLoop = async (person: Person, stateManager: StateManager, personBroadcaster: PersonBroadcaster, lock: AsyncLock) : Promise<void> => {
   await lock.acquire(person.lockName, async () => {
   //  this personLoop now has the specific lock for this person
 
     if (person.status === PersonStatus.NEWLY_SPAWNED) {
       await stateManager.addElevatorRequest(person)
 
-      //  broadcast that someone has just made an elevator request
-      // console.log('person who just made an elevator request', person.status)
-
       //  specify that the user is now waiting for the elevator
       person.status = PersonStatus.WAITING_FOR_ELEVATOR
 
       personBroadcaster.broadcastPersonRequestedElevator(person)
     }
+
+    //  if elevator opens doors AND
 
     // elevators.getElevatorPickingUpPerson(person.)
     // const elevatorPickingUpPerson = await getElevatorPickingUpPerson(person)

@@ -1,17 +1,17 @@
 import AsyncLock from 'async-lock'
 
 import { ElevatorStatus } from '../types/EventPayloads'
-import { elevatorBroadcaster } from '../socketIOSetup'
 import { Elevator } from '../state/Elevator'
+import { ElevatorBroadcaster } from '../broadcasters/ElevatorBroadcaster'
 
-//  this elevatorLoop is responsible for (1) changing the status of the Elevator and (2) broadcasting updates to the client using `elevatorBroadcaster`
-
-export const elevatorLoop = async (elevator: Elevator, lock: AsyncLock) : Promise<void> => {
-  //  take the lock for the specific elevator
+/**
+ * This elevatorLoop represents the actions of an individual elevator.  It (1) both makes and listens for changes in the Elevator status and (2) broadcasts updates to the client using `elevatorBroadcaster`
+ * @param elevator
+ * @param lock
+ */
+export const elevatorLoop = async (elevator: Elevator, elevatorBroadcaster: ElevatorBroadcaster, lock: AsyncLock) : Promise<void> => {
   await lock.acquire(elevator.lockName, async () => {
     //  this elevatorLoop now has the specific lock for this elevator
-
-    // const cantOpenDoorsStatuses = [ElevatorStatus.INACTIVE, ElevatorStatus.DOORS_CLOSING, ElevatorStatus.DOORS_OPENING]
 
     if (elevator.status === ElevatorStatus.TOOK_REQUEST) {
       elevatorBroadcaster.broadcastElevatorTookRequest(elevator)

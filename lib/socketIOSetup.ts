@@ -6,13 +6,8 @@ import AsyncLock from 'async-lock'
 import { ConnectionManager } from './ConnectionManager'
 import { setClientActionListeners } from './BuildingActionListeners'
 
-import { StateManager } from './StateManager'
-
-import { PersonBroadcaster } from './broadcasts/PersonBroadcaster'
-import { ElevatorBroadcaster } from './broadcasts/ElevatorBroadcaster'
-
-export let elevatorBroadcaster: ElevatorBroadcaster
-export let personBroadcaster: PersonBroadcaster
+import { StateManager } from './state/StateManager'
+import { Broadcasters } from './broadcasters/Broadcasters'
 
 export const initSocketIO = (httpServer: Server) : void => {
   //  allows us to read environment variables
@@ -32,10 +27,9 @@ export const initSocketIO = (httpServer: Server) : void => {
 
   const stateManager = new StateManager(lock)
 
-  const connectionManager = new ConnectionManager(io, stateManager, lock)
+  const broadcasters = new Broadcasters(io)
 
-  elevatorBroadcaster = new ElevatorBroadcaster(io)
-  personBroadcaster = new PersonBroadcaster(io)
+  const connectionManager = new ConnectionManager(io, stateManager, broadcasters, lock)
 
   io.on('connection', (socket: Socket) => {
     //  this executes whenever a client connects

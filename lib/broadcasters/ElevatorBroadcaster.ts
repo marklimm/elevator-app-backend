@@ -4,6 +4,9 @@ import { Server as SocketIOServer } from 'socket.io'
 import { Elevator } from '../state/Elevator'
 import { ElevatorUpdate, ElevatorStatus } from '../types/EventPayloads'
 
+/**
+ * This class broadcasts Elevator updates to the clients
+ */
 export class ElevatorBroadcaster {
   private _io: SocketIOServer
 

@@ -1,17 +1,23 @@
 import { GameLoopIntervals } from '../types/types'
 
-import { personBroadcaster } from '../socketIOSetup'
-
 import { personLoop } from './personLoop'
-import { StateManager } from '../StateManager'
+import { StateManager } from '../state/StateManager'
 import AsyncLock from 'async-lock'
+import { PersonBroadcaster } from '../broadcasters/PersonBroadcaster'
 
-export const spawnNewPersonLoop = async (intervalsObj: GameLoopIntervals, stateManager: StateManager, lock: AsyncLock) : Promise<void> => {
+/**
+ * This loop spawns new people on an interval
+ * @param intervalsObj
+ * @param stateManager
+ * @param lock
+ * @returns
+ */
+export const spawnNewPersonLoop = async (intervalsObj: GameLoopIntervals, stateManager: StateManager, personBroadcaster: PersonBroadcaster, lock: AsyncLock) : Promise<void> => {
   const newPerson = await stateManager.addToPeople()
 
   if (!newPerson) { return }
 
-  intervalsObj[`${newPerson.name}`] = setInterval(personLoop.bind(null, newPerson, stateManager, lock), 5000)
+  intervalsObj[`${newPerson.name}`] = setInterval(personLoop.bind(null, newPerson, stateManager, personBroadcaster, lock), 5000)
 
   //  broadcast that a new person has been created
   personBroadcaster.broadcastNewPersonSpawned(newPerson)
