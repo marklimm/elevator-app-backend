@@ -5,19 +5,23 @@ import { Socket } from 'socket.io'
 import { GameLoopManager } from '../gameLoops/GameLoopManager'
 import { ClientCommands, PersonStatus, PersonUpdate } from '../types/EventPayloads'
 
-// import { DECREASE_PEOPLE, INCREASE_PEOPLE, OkOrError, StatusUpdateResponse } from './BuildingActions.exclude'
-// import { addPeople, getNumPeople, removePeople } from '../state/People'
+import { StateManager } from '../state/StateManager'
 
 /**
   * This function defines listeners for the real-time messages sent by the clients
   * @param socket
   */
-export const setClientActionListeners = (socket: Socket, gameLoopManager: GameLoopManager) : void => {
+export const setClientActionListeners = (socket: Socket, gameLoopManager: GameLoopManager, stateManager: StateManager) : void => {
   //  using socket just to resolve the linter error
   console.log('socket.id', socket.id)
 
   socket.on(ClientCommands.SPAWN_NEW_PERSON, async (newPersonName, callback) => {
     console.log('newPersonName', newPersonName)
+
+    if (stateManager.numPeople >= 3) {
+      callback(null)
+      return
+    }
 
     const newPerson = await gameLoopManager.spawnNewPerson(newPersonName)
 

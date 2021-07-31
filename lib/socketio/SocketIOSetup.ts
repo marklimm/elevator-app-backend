@@ -40,7 +40,7 @@ export class SocketIOSetup {
 
       connectionManager.setConnectionListeners(socket)
 
-      setClientActionListeners(socket, gameLoopManager)
+      setClientActionListeners(socket, gameLoopManager, stateManager)
     })
   }
 }

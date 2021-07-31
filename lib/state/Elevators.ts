@@ -61,7 +61,7 @@ export class Elevators {
   }
 
   public chooseElevator (destFloor: number) : Elevator | null {
-    console.log('-- chooseElevator START --')
+    // console.log('-- chooseElevator START --')
     // const elevatorsArr = getElevatorsAsArray()
 
     //  use Object.values() instead?
@@ -78,8 +78,8 @@ export class Elevators {
     //  what is the closest "Ready" elevator to the destFloor?
     const closestReadyElevator = this.getClosestReadyElevator(destFloor)
 
-    console.log('closestReadyElevator', closestReadyElevator)
-    console.log('-- chooseElevator END --')
+    // console.log('closestReadyElevator', closestReadyElevator)
+    // console.log('-- chooseElevator END --')
     return closestReadyElevator
   }
 }

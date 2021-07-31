@@ -90,7 +90,7 @@ export class StateManager {
         return
       }
 
-      console.log('elevatorRequest to be processed', elevatorRequest)
+      // console.log('elevatorRequest to be processed', elevatorRequest)
 
       //  take the elevators lock
       const elevatorTakingRequest = await this._lock.acquire(Elevators.ELEVATORS_LOCK, async () => {
@@ -98,7 +98,7 @@ export class StateManager {
       })
 
       if (!elevatorTakingRequest) {
-        console.log('no elevator is available to handle the request - will try again later')
+        // console.log('no elevator is available to handle the request - will try again later')
         return
       }
 
