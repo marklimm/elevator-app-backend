@@ -3,7 +3,7 @@
 
 import { Socket } from 'socket.io'
 import { GameLoopManager } from '../gameLoops/GameLoopManager'
-import { ClientCommands, PersonStatus, PersonUpdate } from '../types/EventPayloads'
+import { ClientCommands, OkOrError, PersonStatus, PersonUpdate } from '../types/ElevatorAppTypes'
 
 import { StateManager } from '../state/StateManager'
 
@@ -19,7 +19,12 @@ export const setClientActionListeners = (socket: Socket, gameLoopManager: GameLo
     console.log('newPersonName', newPersonName)
 
     if (stateManager.numPeople >= 3) {
-      callback(null)
+      const newPersonSpawnedResponse = {
+        status: OkOrError.Error,
+        error: `Too many people are currently in the building, ${newPersonName} (sadly) was not able to be spawned`
+      }
+
+      callback(newPersonSpawnedResponse)
       return
     }
 
@@ -27,13 +32,18 @@ export const setClientActionListeners = (socket: Socket, gameLoopManager: GameLo
 
     if (!newPerson) { return }
 
-    const newPersonSpawnedResponse: PersonUpdate = {
+    const personUpdate: PersonUpdate = {
       type: PersonStatus.NEWLY_SPAWNED,
       person: {
         personId: newPerson.name,
         name: newPerson.name
       },
       currFloor: newPerson.currFloor
+    }
+
+    const newPersonSpawnedResponse = {
+      status: OkOrError.Ok,
+      personUpdate
     }
 
     callback(newPersonSpawnedResponse)

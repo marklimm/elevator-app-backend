@@ -1,5 +1,5 @@
 import { Server as SocketIOServer, Socket } from 'socket.io'
-import { NewConnectionBuildingResponse, OkOrError } from '../types/EventPayloads'
+import { NewConnectionBuildingResponse, OkOrError } from '../types/ElevatorAppTypes'
 
 import { GameLoopManager } from '../gameLoops/GameLoopManager'
 import { StateManager } from '../state/StateManager'
@@ -35,10 +35,11 @@ export class ConnectionManager {
 
     //  I feel like I might want to re-evaluate how this initial information is sent
     const newConnectionResponse: NewConnectionBuildingResponse = {
-
-      name: building.name,
-      numFloors: building.numFloors,
-      yearBuilt: building.yearBuilt,
+      building: {
+        name: building.name,
+        numFloors: building.numFloors,
+        yearBuilt: building.yearBuilt
+      },
 
       status: OkOrError.Ok,
       message: 'Successfully connected!'

@@ -2,7 +2,7 @@
 import { Server as SocketIOServer } from 'socket.io'
 
 import { Elevator } from '../state/Elevator'
-import { ElevatorUpdate, ElevatorStatus } from '../types/EventPayloads'
+import { ElevatorUpdate, ElevatorStatus, OkOrError } from '../types/ElevatorAppTypes'
 
 /**
  * This class broadcasts Elevator updates to the clients
@@ -15,7 +15,7 @@ export class ElevatorBroadcaster {
   }
 
   public broadcastElevatorReady (elevator: Elevator) : void {
-    const elevatorReady: ElevatorUpdate = {
+    const elevatorUpdate: ElevatorUpdate = {
       type: ElevatorStatus.READY,
       people: [],
       elevator: {
@@ -25,11 +25,16 @@ export class ElevatorBroadcaster {
       currFloor: elevator.currFloor
     }
 
-    this._io.emit('elevator-update', elevatorReady)
+    const elevatorReadyResponse = {
+      status: OkOrError.Ok,
+      elevatorUpdate
+    }
+
+    this._io.emit('elevator-update', elevatorReadyResponse)
   }
 
   public broadcastElevatorTookRequest (elevator: Elevator) : void {
-    const elevatorReceivedRequest: ElevatorUpdate = {
+    const elevatorUpdate: ElevatorUpdate = {
       type: ElevatorStatus.TOOK_REQUEST,
       people: [],
       elevator: {
@@ -40,11 +45,16 @@ export class ElevatorBroadcaster {
       destFloor: elevator.destFloor
     }
 
-    this._io.emit('elevator-update', elevatorReceivedRequest)
+    const elevatorTookRequestResponse = {
+      status: OkOrError.Ok,
+      elevatorUpdate
+    }
+
+    this._io.emit('elevator-update', elevatorTookRequestResponse)
   }
 
   public broadcastElevatorMoving (elevator: Elevator) : void {
-    const elevatorMoving: ElevatorUpdate = {
+    const elevatorUpdate: ElevatorUpdate = {
       type: ElevatorStatus.MOVING_TO_FLOOR,
       people: [],
       elevator: {
@@ -54,11 +64,16 @@ export class ElevatorBroadcaster {
       currFloor: elevator.currFloor
     }
 
-    this._io.emit('elevator-update', elevatorMoving)
+    const elevatorMovingResponse = {
+      status: OkOrError.Ok,
+      elevatorUpdate
+    }
+
+    this._io.emit('elevator-update', elevatorMovingResponse)
   }
 
   public broadcastElevatorOpensDoors (elevator: Elevator) : void {
-    const elevatorDoorsOpening: ElevatorUpdate = {
+    const elevatorUpdate: ElevatorUpdate = {
       type: ElevatorStatus.DOORS_OPENING,
       people: [],
       elevator: {
@@ -68,11 +83,16 @@ export class ElevatorBroadcaster {
       currFloor: elevator.currFloor
     }
 
-    this._io.emit('elevator-update', elevatorDoorsOpening)
+    const elevatorOpensDoorsResponse = {
+      status: OkOrError.Ok,
+      elevatorUpdate
+    }
+
+    this._io.emit('elevator-update', elevatorOpensDoorsResponse)
   }
 
   public broadcastElevatorReceivesDestination (elevator: Elevator) : void {
-    const elevatorReceivesDestination: ElevatorUpdate = {
+    const elevatorUpdate: ElevatorUpdate = {
       type: ElevatorStatus.RECEIVED_DESTINATION,
       people: elevator.people.map(p => ({
         name: p.name,
@@ -86,6 +106,11 @@ export class ElevatorBroadcaster {
       destFloor: elevator.destFloor
     }
 
-    this._io.emit('elevator-update', elevatorReceivesDestination)
+    const elevatorReceivesDestinationResponse = {
+      status: OkOrError.Ok,
+      elevatorUpdate
+    }
+
+    this._io.emit('elevator-update', elevatorReceivesDestinationResponse)
   }
 }

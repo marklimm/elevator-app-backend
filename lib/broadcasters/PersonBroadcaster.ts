@@ -3,7 +3,7 @@ import { Server as SocketIOServer } from 'socket.io'
 import { Elevator } from '../state/Elevator'
 
 import { Person } from '../state/Person'
-import { PersonUpdate, PersonStatus } from '../types/EventPayloads'
+import { PersonUpdate, PersonStatus, OkOrError } from '../types/ElevatorAppTypes'
 
 /**
  * This class broadcasts Person updates to the clients
@@ -16,7 +16,7 @@ export class PersonBroadcaster {
   }
 
   public broadcastNewPersonSpawned (person: Person) : void {
-    const newPersonSpawned: PersonUpdate = {
+    const personUpdate: PersonUpdate = {
       type: PersonStatus.NEWLY_SPAWNED,
       person: {
         personId: person.name,
@@ -25,11 +25,16 @@ export class PersonBroadcaster {
       currFloor: person.currFloor
     }
 
-    this._io.emit('person-update', newPersonSpawned)
+    const newPersonSpawnedResponse = {
+      status: OkOrError.Ok,
+      personUpdate
+    }
+
+    this._io.emit('person-update', newPersonSpawnedResponse)
   }
 
   public broadcastPersonRequestedElevator (person: Person) : void {
-    const personWhoRequestedElevator: PersonUpdate = {
+    const personUpdate: PersonUpdate = {
       type: PersonStatus.REQUESTED_ELEVATOR,
       person: {
         personId: person.name,
@@ -39,11 +44,16 @@ export class PersonBroadcaster {
       destFloor: person.destFloor
     }
 
-    this._io.emit('person-update', personWhoRequestedElevator)
+    const personRequestedElevatorResponse = {
+      status: OkOrError.Ok,
+      personUpdate
+    }
+
+    this._io.emit('person-update', personRequestedElevatorResponse)
   }
 
   public broadcastPersonEnteredElevator (person: Person, elevator: Elevator) : void {
-    const personWhoEnteredElevator: PersonUpdate = {
+    const personUpdate: PersonUpdate = {
       type: PersonStatus.ENTERED_THE_ELEVATOR,
       person: {
         personId: person.name,
@@ -57,6 +67,11 @@ export class PersonBroadcaster {
       destFloor: person.destFloor
     }
 
-    this._io.emit('person-update', personWhoEnteredElevator)
+    const personEnteredElevatorResponse = {
+      status: OkOrError.Ok,
+      personUpdate
+    }
+
+    this._io.emit('person-update', personEnteredElevatorResponse)
   }
 }
