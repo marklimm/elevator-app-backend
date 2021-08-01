@@ -3,7 +3,7 @@ import AsyncLock from 'async-lock'
 import { StateManager } from '../state/StateManager'
 import { PersonBroadcaster } from '../broadcasters/PersonBroadcaster'
 import { Person } from '../state/Person'
-import { PersonStatus } from '../types/EventPayloads'
+import { PersonStatus } from '../types/ElevatorAppTypes'
 
 interface PersonLoopParams {
   person: Person

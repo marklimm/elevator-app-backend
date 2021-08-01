@@ -1,6 +1,6 @@
 import AsyncLock from 'async-lock'
 
-import { ElevatorStatus } from '../types/EventPayloads'
+import { ElevatorStatus } from '../types/ElevatorAppTypes'
 import { Elevator } from '../state/Elevator'
 import { ElevatorBroadcaster } from '../broadcasters/ElevatorBroadcaster'
 

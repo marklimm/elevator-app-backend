@@ -4,7 +4,7 @@ import AsyncLock from 'async-lock'
 import { elevatorLoop } from './elevatorLoop'
 import { personLoop } from './personLoop'
 
-import { GameLoopIntervals } from '../types/types'
+import { GameLoopIntervals } from '../types/ServerSideTypes'
 import { elevatorManagerLoop } from './elevatorManagerLoop'
 import { StateManager } from '../state/StateManager'
 

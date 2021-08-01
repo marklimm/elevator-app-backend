@@ -1,6 +1,6 @@
 import AsyncLock from 'async-lock'
 
-import { Direction } from '../types/types'
+import { Direction } from '../types/ServerSideTypes'
 import { Elevator } from './Elevator'
 import { ElevatorRequests } from './ElevatorRequests'
 import { Elevators } from './Elevators'

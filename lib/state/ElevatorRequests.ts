@@ -1,4 +1,4 @@
-import { ElevatorRequest } from '../types/types'
+import { ElevatorRequest } from '../types/ServerSideTypes'
 
 export class ElevatorRequests {
   public elevatorRequestQueue: ElevatorRequest[]

@@ -1,5 +1,5 @@
 import { Elevator } from './Elevator'
-import { ElevatorStatus } from '../types/EventPayloads'
+import { ElevatorStatus } from '../types/ElevatorAppTypes'
 
 export class Elevators {
   private _elevators: Elevator[]

@@ -1,5 +1,5 @@
-import { ElevatorStatus } from '../types/EventPayloads'
-import { Direction, ElevatorRequest } from '../types/types'
+import { ElevatorStatus } from '../types/ElevatorAppTypes'
+import { Direction, ElevatorRequest } from '../types/ServerSideTypes'
 import { Person } from './Person'
 
 export class Elevator {

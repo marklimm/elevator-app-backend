@@ -1,4 +1,4 @@
-import { PersonStatus } from '../types/EventPayloads'
+import { PersonStatus } from '../types/ElevatorAppTypes'
 
 const PERSON_LOCK = 'person-lock'
 
