@@ -1,11 +1,21 @@
-import { getChangeByAmount } from './Randomizer'
+import { getRandomFloor } from './Randomizer'
 
-it('the change by amount falls within the expected range', () => {
-  const numberOfPeople = getChangeByAmount()
+describe('getRandomFloor', () => {
+  it('selects a random floor when no `notThisFloor` is specified', () => {
+    const highestFloorNumber = 10
 
-  const min = -5
-  const max = 5
+    const selectedFloor = getRandomFloor(highestFloorNumber)
 
-  expect(numberOfPeople).toBeGreaterThanOrEqual(min)
-  expect(numberOfPeople).toBeLessThanOrEqual(max)
+    expect(typeof (selectedFloor)).toBe('number')
+    expect(selectedFloor).toBeLessThanOrEqual(highestFloorNumber)
+  })
+
+  it('selects a random floor NOT equal to `notThisFloor` when `notThisFloor` is specified', () => {
+    const highestFloorNumber = 10
+    const notThisFloorNumber = 5
+
+    const selectedFloor = getRandomFloor(highestFloorNumber, notThisFloorNumber)
+
+    expect(selectedFloor !== notThisFloorNumber).toBe(true)
+  })
 })
