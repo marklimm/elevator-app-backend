@@ -1,5 +1,5 @@
 import { Person } from './Person'
-import { getRandomFloor, getRandomName } from '../randomizer/Randomizer'
+import { getRandomFloor } from '../randomizer/Randomizer'
 
 export class People {
   private _people: Person[]
@@ -35,11 +35,7 @@ export class People {
     this._people = []
   }
 
-  public addPerson (newPersonName?: string, numFloors = 10) : Person {
-    if (!newPersonName) {
-      newPersonName = getRandomName(this.usedNames)
-    }
-
+  public addPerson (newPersonName = 'John Doe', numFloors = 10) : Person {
     const currFloor = getRandomFloor(numFloors)
     const destFloor = getRandomFloor(numFloors, currFloor)
 
