@@ -13,12 +13,22 @@ export const elevatorLoop = async (elevator: Elevator, elevatorBroadcaster: Elev
   await lock.acquire(elevator.lockName, async () => {
     //  this elevatorLoop now has the specific lock for this elevator
 
+    if (elevator.status === ElevatorStatus.DOORS_OPENING) {
+      //  the elevator doors have finished opening
+
+      elevator.doorsOpen()
+
+      elevatorBroadcaster.broadcastElevatorDoorsOpen(elevator)
+
+      return
+    }
+
     if (elevator.shouldOpenDoors()) {
       //  elevator has reached its destination, open the doors
 
-      elevator.openDoors()
+      elevator.doorsOpening()
 
-      elevatorBroadcaster.broadcastElevatorOpensDoors(elevator)
+      elevatorBroadcaster.broadcastElevatorOpeningDoors(elevator)
 
       return
     }
