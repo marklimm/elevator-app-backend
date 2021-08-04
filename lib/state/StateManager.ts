@@ -1,6 +1,5 @@
 import AsyncLock from 'async-lock'
 
-import { Direction } from '../types/ServerSideTypes'
 import { Elevator } from './Elevator'
 import { ElevatorRequests } from './ElevatorRequests'
 import { Elevators } from './Elevators'
@@ -8,6 +7,7 @@ import { People } from './People'
 
 import { Person } from './Person'
 import { Building } from './Building'
+import { Direction, ElevatorStatus, PersonStatus } from '../types/ElevatorAppTypes'
 
 /**
  * This class is the single source of truth for the state of the application.  It contains methods to read and modify state
@@ -68,7 +68,7 @@ export class StateManager {
   }
 
   public async addElevatorRequest (personCallingElevator: Person) : Promise<void> {
-    const direction = personCallingElevator.currFloor < personCallingElevator.destFloor ? Direction.GOING_UP : Direction.GOING_DOWN
+    const direction = personCallingElevator.currFloor < personCallingElevator.destFloor ? Direction.UP : Direction.DOWN
 
     const elevatorRequest = { destFloor: personCallingElevator.currFloor, direction }
 
@@ -122,5 +122,20 @@ export class StateManager {
     // console.log('-- END -- findElevatorToTakeRequest')
 
     return elevatorTakingRequest
+  }
+
+  /**
+   * Determines if there's an elevator with its doors open that's going in the same direction as the given person
+   * @param person
+   * @returns
+   */
+  public async elevatorHasOpenDoorsAndPersonWantsToGoInTheSameDirection (person: Person) : Promise<Elevator | undefined> {
+    const elevator = await this._lock.acquire(Elevators.ELEVATORS_LOCK, async () => {
+      return this._elevators.elevators.find(elevator =>
+        elevator.status === ElevatorStatus.DOORS_OPEN && elevator.direction === person.direction && person.status === PersonStatus.REQUESTED_ELEVATOR
+      )
+    })
+
+    return elevator
   }
 }

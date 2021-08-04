@@ -21,17 +21,18 @@ export const personLoop = async ({ person, stateManager, personBroadcaster, lock
     if (person.status === PersonStatus.NEWLY_SPAWNED) {
       await stateManager.addElevatorRequest(person)
 
-      personBroadcaster.broadcastPersonRequestedElevator(person)
-
       person.status = PersonStatus.REQUESTED_ELEVATOR
+
+      personBroadcaster.broadcastPersonRequestedElevator(person)
     }
 
-    // if (person.status === PersonStatus.REQUESTED_ELEVATOR) {
+    const elevatorTakingPerson = await stateManager.elevatorHasOpenDoorsAndPersonWantsToGoInTheSameDirection(person)
 
-    //   person.status = PersonStatus.WAITING_FOR_ELEVATOR
+    if (elevatorTakingPerson) {
+      person.status = PersonStatus.ENTERED_THE_ELEVATOR
 
-    //   return
-    // }
+      personBroadcaster.broadcastPersonEnteredElevator(person, elevatorTakingPerson)
+    }
 
     // if (person.status === PersonStatus.WAITING_FOR_ELEVATOR) {
 
