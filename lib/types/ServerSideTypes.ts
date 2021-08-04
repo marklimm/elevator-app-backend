@@ -1,12 +1,9 @@
+import { Direction } from './ElevatorAppTypes'
+
 //  These types are only used on the server-side
 
 export interface GameLoopIntervals {
   [key: string]: NodeJS.Timeout
-}
-
-export enum Direction {
-  GOING_DOWN = 'going-down',
-  GOING_UP = 'going-up'
 }
 
 /**

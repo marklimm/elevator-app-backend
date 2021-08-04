@@ -1,4 +1,4 @@
-import { PersonStatus } from '../types/ElevatorAppTypes'
+import { Direction, PersonStatus } from '../types/ElevatorAppTypes'
 
 const PERSON_LOCK = 'person-lock'
 
@@ -21,5 +21,9 @@ export class Person {
    */
   public get lockName () : string {
     return `${PERSON_LOCK}-${this.name}`
+  }
+
+  public get direction () : Direction {
+    return this.currFloor > this.destFloor ? Direction.DOWN : Direction.UP
   }
 }

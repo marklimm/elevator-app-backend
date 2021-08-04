@@ -61,7 +61,8 @@ export class PersonBroadcaster {
       },
       elevator: {
         elevatorId: elevator.name,
-        name: elevator.name
+        name: elevator.name,
+        direction: elevator.direction
       },
       currFloor: person.currFloor,
       destFloor: person.destFloor

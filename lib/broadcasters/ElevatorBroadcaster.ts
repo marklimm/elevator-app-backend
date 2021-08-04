@@ -2,7 +2,7 @@
 import { Server as SocketIOServer } from 'socket.io'
 
 import { Elevator } from '../state/Elevator'
-import { ElevatorUpdate, ElevatorStatus, OkOrError } from '../types/ElevatorAppTypes'
+import { ElevatorUpdate, ElevatorStatus, OkOrError, Direction } from '../types/ElevatorAppTypes'
 
 /**
  * This class broadcasts Elevator updates to the clients
@@ -20,7 +20,8 @@ export class ElevatorBroadcaster {
       people: [],
       elevator: {
         elevatorId: elevator.name,
-        name: elevator.name
+        name: elevator.name,
+        direction: Direction.NONE
       },
       currFloor: elevator.currFloor
     }
@@ -39,7 +40,8 @@ export class ElevatorBroadcaster {
       people: [],
       elevator: {
         elevatorId: elevator.name,
-        name: elevator.name
+        name: elevator.name,
+        direction: elevator.direction
       },
       currFloor: elevator.currFloor,
       destFloor: elevator.destFloor
@@ -59,7 +61,8 @@ export class ElevatorBroadcaster {
       people: [],
       elevator: {
         elevatorId: elevator.name,
-        name: elevator.name
+        name: elevator.name,
+        direction: elevator.direction
       },
       currFloor: elevator.currFloor
     }
@@ -72,13 +75,14 @@ export class ElevatorBroadcaster {
     this._io.emit('elevator-update', elevatorMovingResponse)
   }
 
-  public broadcastElevatorOpensDoors (elevator: Elevator) : void {
+  public broadcastElevatorOpeningDoors (elevator: Elevator) : void {
     const elevatorUpdate: ElevatorUpdate = {
       type: ElevatorStatus.DOORS_OPENING,
       people: [],
       elevator: {
         elevatorId: elevator.name,
-        name: elevator.name
+        name: elevator.name,
+        direction: elevator.direction
       },
       currFloor: elevator.currFloor
     }
@@ -91,6 +95,26 @@ export class ElevatorBroadcaster {
     this._io.emit('elevator-update', elevatorOpensDoorsResponse)
   }
 
+  public broadcastElevatorDoorsOpen (elevator: Elevator) : void {
+    const elevatorUpdate: ElevatorUpdate = {
+      type: ElevatorStatus.DOORS_OPEN,
+      people: [],
+      elevator: {
+        elevatorId: elevator.name,
+        name: elevator.name,
+        direction: elevator.direction
+      },
+      currFloor: elevator.currFloor
+    }
+
+    const elevatorDoorsOpenResponse = {
+      status: OkOrError.Ok,
+      elevatorUpdate
+    }
+
+    this._io.emit('elevator-update', elevatorDoorsOpenResponse)
+  }
+
   public broadcastElevatorReceivesDestination (elevator: Elevator) : void {
     const elevatorUpdate: ElevatorUpdate = {
       type: ElevatorStatus.RECEIVED_DESTINATION,
@@ -100,7 +124,8 @@ export class ElevatorBroadcaster {
       })),
       elevator: {
         elevatorId: elevator.name,
-        name: elevator.name
+        name: elevator.name,
+        direction: elevator.direction
       },
       currFloor: elevator.currFloor,
       destFloor: elevator.destFloor

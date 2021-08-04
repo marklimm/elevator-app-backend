@@ -1,10 +1,16 @@
-import { ElevatorStatus } from '../types/ElevatorAppTypes'
-import { Direction, ElevatorRequest } from '../types/ServerSideTypes'
+import { Direction, ElevatorStatus } from '../types/ElevatorAppTypes'
+import { ElevatorRequest } from '../types/ServerSideTypes'
 import { Person } from './Person'
 
 export class Elevator {
   private _currFloor: number
   private _destFloor: number
+
+  /**
+   * The Direction this elevator will have once it reaches its destination
+   */
+  private _futureDirection: Direction
+
   private _name: string
   private _people: Person[]
   private _status: ElevatorStatus
@@ -17,6 +23,8 @@ export class Elevator {
     this._name = name
     this._people = []
     this._status = ElevatorStatus.READY
+
+    this._futureDirection = Direction.NONE
   }
 
   /**
@@ -31,7 +39,9 @@ export class Elevator {
   }
 
   public get direction () : Direction {
-    return this._currFloor > this._destFloor ? Direction.GOING_DOWN : Direction.GOING_UP
+    if (this._currFloor === this._destFloor) { return Direction.NONE }
+
+    return this._currFloor > this._destFloor ? Direction.DOWN : Direction.UP
   }
 
   public get currFloor () : number {
@@ -59,17 +69,28 @@ export class Elevator {
   }
 
   public movesToFloor () : void {
-    this.direction === Direction.GOING_UP ? this._currFloor += 1 : this._currFloor -= 1
+    this.direction === Direction.UP ? this._currFloor += 1 : this._currFloor -= 1
   }
 
-  public openDoors () : void {
+  public doorsOpening () : void {
     this._status = ElevatorStatus.DOORS_OPENING
+
+    //  the elevator doesn't know yet which floor the user wants to go to, but the elevator does know which direction they want to go.  Set a max or min value for destFloor which will update the `direction` value.  This tells the "lights on top of the elevator doors" whether to point UP or DOWN
+    this._destFloor = this._futureDirection === Direction.DOWN ? 0 : Number.MAX_SAFE_INTEGER
+
+    //  clear out futureDirection since we've "copied over" that direction to the elevator
+    this._futureDirection = Direction.NONE
+  }
+
+  public doorsOpen () : void {
+    this._status = ElevatorStatus.DOORS_OPEN
   }
 
   public takeRequest (elevatorRequest: ElevatorRequest) : void {
     //  I feel like there would be more complicated logic if an elevator is stopping mid-way to also answer a new request that is going in the same direction that the elevator is already going
 
     this._destFloor = elevatorRequest.destFloor
+    this._futureDirection = elevatorRequest.direction
     this._status = ElevatorStatus.TOOK_REQUEST
   }
 

@@ -1,6 +1,17 @@
 //  The types in this file define a shared "contract" between the frontend and backend.  These types are the statuses and payloads that get broadcasted from the server to the clients.
 //  This file is identical on both the frontend and backend
 
+export enum Direction {
+  DOWN = 'down',
+
+  /**
+   * Direction is "none" when an elevator's current floor is its destination floor and does not have a request to move
+   */
+  NONE = 'none',
+
+  UP = 'up',
+}
+
 //  -----------------------------
 //  Data transfer object types
 
@@ -11,6 +22,7 @@ export interface BuildingDTO {
 }
 
 export interface ElevatorDTO {
+  direction: Direction
   elevatorId: string
   name: string
 }
@@ -36,6 +48,7 @@ export enum ElevatorStatus {
   READY = 'ready',
   TOOK_REQUEST = 'took-request',
   DOORS_OPENING = 'doors-opening',
+  DOORS_OPEN = 'doors-open',
   DOORS_CLOSING = 'doors-closing',
   RECEIVED_DESTINATION = 'received-destination',
   MOVING_TO_FLOOR = 'moving-to-floor',
