@@ -9,6 +9,8 @@ import { Person } from './Person'
 import { Building } from './Building'
 import { Direction, ElevatorStatus, PersonStatus } from '../types/ElevatorAppTypes'
 
+//  so maybe a rule for this StateManager class is that it deals with the locks for handling the array of elevators and the array of people, but NOT the individual elevators and individual people
+
 /**
  * This class is the single source of truth for the state of the application.  It contains methods to read and modify state
  */

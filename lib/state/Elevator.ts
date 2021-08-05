@@ -60,16 +60,12 @@ export class Elevator {
     return this._status
   }
 
-  public elevatorHeadingTowardsFloor (elevatorRequest: ElevatorRequest) : boolean {
-    return this._currFloor <= elevatorRequest.destFloor && elevatorRequest.destFloor <= this._destFloor
+  public doorsClosed () : void {
+    this._status = ElevatorStatus.DOORS_CLOSED
   }
 
-  public shouldOpenDoors () : boolean {
-    return this._currFloor === this._destFloor && this._status === ElevatorStatus.MOVING_TO_FLOOR
-  }
-
-  public movesToFloor () : void {
-    this.direction === Direction.UP ? this._currFloor += 1 : this._currFloor -= 1
+  public doorsClosing () : void {
+    this._status = ElevatorStatus.DOORS_CLOSING
   }
 
   public doorsOpening () : void {
@@ -86,6 +82,27 @@ export class Elevator {
     this._status = ElevatorStatus.DOORS_OPEN
   }
 
+  public elevatorHeadingTowardsFloor (elevatorRequest: ElevatorRequest) : boolean {
+    return this._currFloor <= elevatorRequest.destFloor && elevatorRequest.destFloor <= this._destFloor
+  }
+
+  public movesToFloor () : void {
+    this.direction === Direction.UP ? this._currFloor += 1 : this._currFloor -= 1
+  }
+
+  public receivedDestination (destFloor = 1) : void {
+    this._status = ElevatorStatus.RECEIVED_DESTINATION
+    this._destFloor = destFloor
+  }
+
+  public shouldStopAndOpenDoors () : boolean {
+    return this._currFloor === this._destFloor && this._status === ElevatorStatus.MOVING_TO_FLOOR
+  }
+
+  public startMoving () : void {
+    this._status = ElevatorStatus.MOVING_TO_FLOOR
+  }
+
   public takeRequest (elevatorRequest: ElevatorRequest) : void {
     //  I feel like there would be more complicated logic if an elevator is stopping mid-way to also answer a new request that is going in the same direction that the elevator is already going
 
@@ -94,16 +111,7 @@ export class Elevator {
     this._status = ElevatorStatus.TOOK_REQUEST
   }
 
-  public startMoving () : void {
-    this._status = ElevatorStatus.MOVING_TO_FLOOR
+  public takesPerson (person: Person) : void {
+    this.people.push(person)
   }
-
-  // public elevatorGetsRiderAndDestination (person: Person) : void {
-  //   this._status = ElevatorStatus.MOVING_TO_FLOOR
-  //   this._destFloor = person.destFloor
-  //   this._people = [
-  //     ...this._people,
-  //     person
-  //   ]
-  // }
 }

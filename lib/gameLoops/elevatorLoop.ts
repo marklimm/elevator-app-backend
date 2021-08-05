@@ -13,6 +13,35 @@ export const elevatorLoop = async (elevator: Elevator, elevatorBroadcaster: Elev
   await lock.acquire(elevator.lockName, async () => {
     //  this elevatorLoop now has the specific lock for this elevator
 
+    if (elevator.status === ElevatorStatus.DOORS_CLOSED) {
+      elevator.startMoving()
+
+      //  not sure if it's necessary to broadcast that the person is starting their ride on the elevator
+
+      return
+    }
+
+    if (elevator.status === ElevatorStatus.DOORS_CLOSING) {
+      elevator.doorsClosed()
+
+      elevatorBroadcaster.broadcastElevatorDoorsClosed(elevator)
+
+      return
+    }
+
+    if (elevator.status === ElevatorStatus.RECEIVED_DESTINATION) {
+      elevatorBroadcaster.broadcastElevatorReceivedDestination(elevator)
+
+      //  wait 1 second
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
+      elevator.doorsClosing()
+
+      elevatorBroadcaster.broadcastElevatorDoorsClosing(elevator)
+
+      return
+    }
+
     if (elevator.status === ElevatorStatus.DOORS_OPENING) {
       //  the elevator doors have finished opening
 
@@ -23,7 +52,7 @@ export const elevatorLoop = async (elevator: Elevator, elevatorBroadcaster: Elev
       return
     }
 
-    if (elevator.shouldOpenDoors()) {
+    if (elevator.shouldStopAndOpenDoors()) {
       //  elevator has reached its destination, open the doors
 
       elevator.doorsOpening()

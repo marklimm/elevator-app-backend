@@ -115,7 +115,7 @@ export class ElevatorBroadcaster {
     this._io.emit('elevator-update', elevatorDoorsOpenResponse)
   }
 
-  public broadcastElevatorReceivesDestination (elevator: Elevator) : void {
+  public broadcastElevatorReceivedDestination (elevator: Elevator) : void {
     const elevatorUpdate: ElevatorUpdate = {
       type: ElevatorStatus.RECEIVED_DESTINATION,
       people: elevator.people.map(p => ({
@@ -131,11 +131,59 @@ export class ElevatorBroadcaster {
       destFloor: elevator.destFloor
     }
 
-    const elevatorReceivesDestinationResponse = {
+    const elevatorReceivedDestinationResponse = {
       status: OkOrError.Ok,
       elevatorUpdate
     }
 
-    this._io.emit('elevator-update', elevatorReceivesDestinationResponse)
+    this._io.emit('elevator-update', elevatorReceivedDestinationResponse)
+  }
+
+  public broadcastElevatorDoorsClosing (elevator: Elevator) : void {
+    const elevatorUpdate: ElevatorUpdate = {
+      type: ElevatorStatus.DOORS_CLOSING,
+      people: elevator.people.map(p => ({
+        name: p.name,
+        personId: p.name
+      })),
+      elevator: {
+        elevatorId: elevator.name,
+        name: elevator.name,
+        direction: elevator.direction
+      },
+      currFloor: elevator.currFloor,
+      destFloor: elevator.destFloor
+    }
+
+    const elevatorDoorsClosingResponse = {
+      status: OkOrError.Ok,
+      elevatorUpdate
+    }
+
+    this._io.emit('elevator-update', elevatorDoorsClosingResponse)
+  }
+
+  public broadcastElevatorDoorsClosed (elevator: Elevator) : void {
+    const elevatorUpdate: ElevatorUpdate = {
+      type: ElevatorStatus.DOORS_CLOSED,
+      people: elevator.people.map(p => ({
+        name: p.name,
+        personId: p.name
+      })),
+      elevator: {
+        elevatorId: elevator.name,
+        name: elevator.name,
+        direction: elevator.direction
+      },
+      currFloor: elevator.currFloor,
+      destFloor: elevator.destFloor
+    }
+
+    const elevatorDoorsClosedResponse = {
+      status: OkOrError.Ok,
+      elevatorUpdate
+    }
+
+    this._io.emit('elevator-update', elevatorDoorsClosedResponse)
   }
 }

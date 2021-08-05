@@ -75,4 +75,28 @@ export class PersonBroadcaster {
 
     this._io.emit('person-update', personEnteredElevatorResponse)
   }
+
+  public broadcastPersonPressedButton (person: Person, elevator: Elevator) : void {
+    const personUpdate: PersonUpdate = {
+      type: PersonStatus.PRESSED_BUTTON,
+      person: {
+        personId: person.name,
+        name: person.name
+      },
+      elevator: {
+        elevatorId: elevator.name,
+        name: elevator.name,
+        direction: elevator.direction
+      },
+      currFloor: person.currFloor,
+      destFloor: person.destFloor
+    }
+
+    const personPressedButtonResponse = {
+      status: OkOrError.Ok,
+      personUpdate
+    }
+
+    this._io.emit('person-update', personPressedButtonResponse)
+  }
 }

@@ -39,7 +39,7 @@ export enum PersonStatus {
   NEWLY_SPAWNED = 'newly-spawned',
   REQUESTED_ELEVATOR = 'requested-elevator',
   ENTERED_THE_ELEVATOR = 'entered-the-elevator',
-  PRESSES_BUTTON = 'presses-button',
+  PRESSED_BUTTON = 'pressed-button',
   IN_THE_ELEVATOR = 'in-the-elevator',
   LEFT_THE_ELEVATOR = 'left-the-elevator',
 }
@@ -47,11 +47,14 @@ export enum PersonStatus {
 export enum ElevatorStatus {
   READY = 'ready',
   TOOK_REQUEST = 'took-request',
+  MOVING_TO_FLOOR = 'moving-to-floor',
+
   DOORS_OPENING = 'doors-opening',
   DOORS_OPEN = 'doors-open',
-  DOORS_CLOSING = 'doors-closing',
   RECEIVED_DESTINATION = 'received-destination',
-  MOVING_TO_FLOOR = 'moving-to-floor',
+  DOORS_CLOSING = 'doors-closing',
+  DOORS_CLOSED = 'doors-closed',
+
   INACTIVE = 'inactive',
 }
 
