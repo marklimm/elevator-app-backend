@@ -23,7 +23,7 @@ export const personLoop = async ({ person, stateManager, personBroadcaster, lock
     if (person.status === PersonStatus.NEWLY_SPAWNED) {
       await stateManager.addElevatorRequest(person)
 
-      person.status = PersonStatus.REQUESTED_ELEVATOR
+      person.requestsElevator()
 
       personBroadcaster.broadcastPersonRequestedElevator(person)
 
@@ -33,8 +33,7 @@ export const personLoop = async ({ person, stateManager, personBroadcaster, lock
     const elevatorTakingPerson = await stateManager.elevatorHasOpenDoorsAndPersonWantsToGoInTheSameDirection(person)
 
     if (elevatorTakingPerson) {
-      person.status = PersonStatus.ENTERED_THE_ELEVATOR
-      person.elevator = elevatorTakingPerson
+      person.entersElevator(elevatorTakingPerson)
 
       //  take the lock for the specific elevator
       const updatedElevator = await lock.acquire(elevatorTakingPerson.lockName, async () => {
@@ -49,7 +48,7 @@ export const personLoop = async ({ person, stateManager, personBroadcaster, lock
     }
 
     if (person.status === PersonStatus.ENTERED_THE_ELEVATOR && !!person.elevator) {
-      person.status = PersonStatus.PRESSED_BUTTON
+      person.pressesButton()
 
       //  take the lock for the specific elevator
       await lock.acquire(person.elevator.lockName, async () => {
@@ -61,21 +60,5 @@ export const personLoop = async ({ person, stateManager, personBroadcaster, lock
 
       personBroadcaster.broadcastPersonPressedButton(person, person.elevator)
     }
-
-    // if (person.status === PersonStatus.WAITING_FOR_ELEVATOR) {
-
-    //   return
-    // }
-
-    //  if elevator opens doors AND
-
-    // elevators.getElevatorPickingUpPerson(person.)
-    // const elevatorPickingUpPerson = await getElevatorPickingUpPerson(person)
-
-    // if (elevatorPickingUpPerson) {
-    //   await elevatorGetsRiderAndDestination(elevatorPickingUpPerson, person)
-
-    //   elevatorBroadcaster.broadcastElevatorReceivesDestination(elevatorPickingUpPerson)
-    // }
   })
 }
