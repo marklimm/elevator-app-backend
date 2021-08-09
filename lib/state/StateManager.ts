@@ -134,7 +134,7 @@ export class StateManager {
   public async elevatorHasOpenDoorsAndPersonWantsToGoInTheSameDirection (person: Person) : Promise<Elevator | undefined> {
     const elevator = await this._lock.acquire(Elevators.ELEVATORS_LOCK, async () => {
       return this._elevators.elevators.find(elevator =>
-        elevator.status === ElevatorStatus.DOORS_OPEN && elevator.direction === person.direction && person.status === PersonStatus.REQUESTED_ELEVATOR
+        elevator.status === ElevatorStatus.DOORS_OPEN && elevator.currFloor === person.currFloor && elevator.direction === person.direction && person.status === PersonStatus.REQUESTED_ELEVATOR
       )
     })
 
