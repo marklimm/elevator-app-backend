@@ -36,13 +36,13 @@ export const personLoop = async ({ person, stateManager, personBroadcaster, lock
       person.entersElevator(elevatorTakingPerson)
 
       //  take the lock for the specific elevator
-      const updatedElevator = await lock.acquire(elevatorTakingPerson.lockName, async () => {
+      await lock.acquire(elevatorTakingPerson.lockName, async () => {
         elevatorTakingPerson.takesPerson(person)
 
         return elevatorTakingPerson
       })
 
-      personBroadcaster.broadcastPersonEnteredElevator(person, updatedElevator)
+      personBroadcaster.broadcastPersonEnteredElevator(person)
 
       return
     }
@@ -58,7 +58,7 @@ export const personLoop = async ({ person, stateManager, personBroadcaster, lock
         person.elevator.receivedDestination(person.destFloor)
       })
 
-      personBroadcaster.broadcastPersonPressedButton(person, person.elevator)
+      personBroadcaster.broadcastPersonPressedButton(person)
     }
   })
 }

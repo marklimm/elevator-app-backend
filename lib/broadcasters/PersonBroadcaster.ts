@@ -1,9 +1,8 @@
 
 import { Server as SocketIOServer } from 'socket.io'
-import { Elevator } from '../state/Elevator'
 
 import { Person } from '../state/Person'
-import { PersonUpdate, PersonStatus, OkOrError } from '../types/ElevatorAppTypes'
+import { OkOrError } from '../types/ElevatorAppTypes'
 
 /**
  * This class broadcasts Person updates to the clients
@@ -15,88 +14,30 @@ export class PersonBroadcaster {
     this._io = io
   }
 
-  public broadcastNewPersonSpawned (person: Person) : void {
-    const personUpdate: PersonUpdate = {
-      type: PersonStatus.NEWLY_SPAWNED,
-      person: {
-        personId: person.name,
-        name: person.name
-      },
-      currFloor: person.currFloor
-    }
-
-    const newPersonSpawnedResponse = {
+  private _sendPersonUpdate (person: Person) : void {
+    const personUpdate = {
       status: OkOrError.Ok,
-      personUpdate
+      personUpdate: person.toJS()
     }
 
-    this._io.emit('person-update', newPersonSpawnedResponse)
+    this._io.emit('person-update', personUpdate)
+  }
+
+  //  the below broadcast___() functions all do the same thing, but I thought it would make the code easier to read to have descriptive function names to see which update is being broadcast
+
+  public broadcastNewPersonSpawned (person: Person) : void {
+    this._sendPersonUpdate(person)
   }
 
   public broadcastPersonRequestedElevator (person: Person) : void {
-    const personUpdate: PersonUpdate = {
-      type: PersonStatus.REQUESTED_ELEVATOR,
-      person: {
-        personId: person.name,
-        name: person.name
-      },
-      currFloor: person.currFloor,
-      destFloor: person.destFloor
-    }
-
-    const personRequestedElevatorResponse = {
-      status: OkOrError.Ok,
-      personUpdate
-    }
-
-    this._io.emit('person-update', personRequestedElevatorResponse)
+    this._sendPersonUpdate(person)
   }
 
-  public broadcastPersonEnteredElevator (person: Person, elevator: Elevator) : void {
-    const personUpdate: PersonUpdate = {
-      type: PersonStatus.ENTERED_THE_ELEVATOR,
-      person: {
-        personId: person.name,
-        name: person.name
-      },
-      elevator: {
-        elevatorId: elevator.name,
-        name: elevator.name,
-        direction: elevator.direction
-      },
-      currFloor: person.currFloor,
-      destFloor: person.destFloor
-    }
-
-    const personEnteredElevatorResponse = {
-      status: OkOrError.Ok,
-      personUpdate
-    }
-
-    this._io.emit('person-update', personEnteredElevatorResponse)
+  public broadcastPersonEnteredElevator (person: Person) : void {
+    this._sendPersonUpdate(person)
   }
 
-  public broadcastPersonPressedButton (person: Person, elevator: Elevator) : void {
-    const personUpdate: PersonUpdate = {
-      type: PersonStatus.PRESSED_BUTTON,
-      person: {
-        personId: person.name,
-        name: person.name
-      },
-      elevator: {
-        elevatorId: elevator.name,
-        name: elevator.name,
-        direction: elevator.direction
-      },
-      currFloor: person.currFloor,
-      destFloor: person.destFloor
-    }
-
-    const personPressedButtonResponse = {
-      status: OkOrError.Ok,
-      personUpdate
-    }
-
-    this._io.emit('person-update', personPressedButtonResponse)
+  public broadcastPersonPressedButton (person: Person) : void {
+    this._sendPersonUpdate(person)
   }
 }

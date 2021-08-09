@@ -1,4 +1,4 @@
-import { Direction, PersonStatus } from '../types/ElevatorAppTypes'
+import { Direction, PersonStatus, PersonUpdate } from '../types/ElevatorAppTypes'
 import { Elevator } from './Elevator'
 
 export class Person {
@@ -52,6 +52,32 @@ export class Person {
 
   public get status () : PersonStatus {
     return this._status
+  }
+
+  /**
+   * This method converts the Person into the JSON type that gets broadcasted to the client
+   * @returns
+   */
+  public toJS () : PersonUpdate {
+    return {
+      type: this._status,
+      person: {
+        currFloor: this._currFloor,
+        destFloor: this._destFloor,
+        direction: this.direction,
+        name: this._name
+
+      },
+
+      elevator: !this._elevator
+        ? undefined
+        : {
+            currFloor: this._elevator.currFloor,
+            destFloor: this._elevator.destFloor,
+            direction: this._elevator.direction,
+            name: this._elevator.name
+          }
+    }
   }
 
   public entersElevator (elevator: Elevator) : void {

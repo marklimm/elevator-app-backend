@@ -1,6 +1,15 @@
 //  The types in this file define a shared "contract" between the frontend and backend.  These types are the statuses and payloads that get broadcasted from the server to the clients.
 //  This file is identical on both the frontend and backend
 
+/**
+ * A type representing information on the Building itself
+ */
+export interface Building {
+  name: string
+  numFloors: number
+  yearBuilt: number
+}
+
 export enum Direction {
   DOWN = 'down',
 
@@ -10,26 +19,6 @@ export enum Direction {
   NONE = 'none',
 
   UP = 'up',
-}
-
-//  -----------------------------
-//  Data transfer object types
-
-export interface BuildingDTO {
-  name: string
-  numFloors: number
-  yearBuilt: number
-}
-
-export interface ElevatorDTO {
-  direction: Direction
-  elevatorId: string
-  name: string
-}
-
-export interface PersonDTO {
-  personId: string
-  name: string
 }
 
 //  -----------------------------
@@ -61,22 +50,23 @@ export enum ElevatorStatus {
 //  -----------------------------
 //  Person and Elevator update types
 
+interface CommonFields {
+  currFloor: number
+  destFloor: number
+  direction: Direction
+  name: string
+}
+
 export type PersonUpdate = {
   type: PersonStatus
-
-  person?: PersonDTO
-  elevator?: ElevatorDTO
-  currFloor: number
-  destFloor?: number
+  person: CommonFields
+  elevator?: CommonFields
 }
 
 export type ElevatorUpdate = {
   type: ElevatorStatus
-
-  people: PersonDTO[]
-  elevator: ElevatorDTO
-  currFloor: number
-  destFloor?: number
+  elevator: CommonFields
+  people?: CommonFields[]
 }
 
 //  -----------------------------
@@ -107,7 +97,7 @@ export interface ResponseStatus {
  * This response is sent when a client first connects to the realtime server
  */
 export type NewConnectionBuildingResponse = ResponseStatus & {
-  building: BuildingDTO
+  building: Building
 }
 
 /**

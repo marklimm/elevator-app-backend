@@ -2,7 +2,7 @@
 import { Server as SocketIOServer } from 'socket.io'
 
 import { Elevator } from '../state/Elevator'
-import { ElevatorUpdate, ElevatorStatus, OkOrError, Direction } from '../types/ElevatorAppTypes'
+import { OkOrError } from '../types/ElevatorAppTypes'
 
 /**
  * This class broadcasts Elevator updates to the clients
@@ -14,176 +14,46 @@ export class ElevatorBroadcaster {
     this._io = io
   }
 
-  public broadcastElevatorReady (elevator: Elevator) : void {
-    const elevatorUpdate: ElevatorUpdate = {
-      type: ElevatorStatus.READY,
-      people: [],
-      elevator: {
-        elevatorId: elevator.name,
-        name: elevator.name,
-        direction: Direction.NONE
-      },
-      currFloor: elevator.currFloor
-    }
-
-    const elevatorReadyResponse = {
+  private _sendElevatorUpdate (elevator: Elevator) : void {
+    const elevatorUpdate = {
       status: OkOrError.Ok,
-      elevatorUpdate
+      elevatorUpdate: elevator.toJS()
     }
 
-    this._io.emit('elevator-update', elevatorReadyResponse)
+    this._io.emit('elevator-update', elevatorUpdate)
+  }
+
+  //  the below broadcast___() functions all do the same thing, but I thought it would make the code easier to read to have descriptive function names to see which update is being broadcast
+
+  public broadcastElevatorReady (elevator: Elevator) : void {
+    this._sendElevatorUpdate(elevator)
   }
 
   public broadcastElevatorTookRequest (elevator: Elevator) : void {
-    const elevatorUpdate: ElevatorUpdate = {
-      type: ElevatorStatus.TOOK_REQUEST,
-      people: [],
-      elevator: {
-        elevatorId: elevator.name,
-        name: elevator.name,
-        direction: elevator.direction
-      },
-      currFloor: elevator.currFloor,
-      destFloor: elevator.destFloor
-    }
-
-    const elevatorTookRequestResponse = {
-      status: OkOrError.Ok,
-      elevatorUpdate
-    }
-
-    this._io.emit('elevator-update', elevatorTookRequestResponse)
+    this._sendElevatorUpdate(elevator)
   }
 
   public broadcastElevatorMoving (elevator: Elevator) : void {
-    const elevatorUpdate: ElevatorUpdate = {
-      type: ElevatorStatus.MOVING_TO_FLOOR,
-      people: [],
-      elevator: {
-        elevatorId: elevator.name,
-        name: elevator.name,
-        direction: elevator.direction
-      },
-      currFloor: elevator.currFloor
-    }
-
-    const elevatorMovingResponse = {
-      status: OkOrError.Ok,
-      elevatorUpdate
-    }
-
-    this._io.emit('elevator-update', elevatorMovingResponse)
+    this._sendElevatorUpdate(elevator)
   }
 
   public broadcastElevatorOpeningDoors (elevator: Elevator) : void {
-    const elevatorUpdate: ElevatorUpdate = {
-      type: ElevatorStatus.DOORS_OPENING,
-      people: [],
-      elevator: {
-        elevatorId: elevator.name,
-        name: elevator.name,
-        direction: elevator.direction
-      },
-      currFloor: elevator.currFloor
-    }
-
-    const elevatorOpensDoorsResponse = {
-      status: OkOrError.Ok,
-      elevatorUpdate
-    }
-
-    this._io.emit('elevator-update', elevatorOpensDoorsResponse)
+    this._sendElevatorUpdate(elevator)
   }
 
   public broadcastElevatorDoorsOpen (elevator: Elevator) : void {
-    const elevatorUpdate: ElevatorUpdate = {
-      type: ElevatorStatus.DOORS_OPEN,
-      people: [],
-      elevator: {
-        elevatorId: elevator.name,
-        name: elevator.name,
-        direction: elevator.direction
-      },
-      currFloor: elevator.currFloor
-    }
-
-    const elevatorDoorsOpenResponse = {
-      status: OkOrError.Ok,
-      elevatorUpdate
-    }
-
-    this._io.emit('elevator-update', elevatorDoorsOpenResponse)
+    this._sendElevatorUpdate(elevator)
   }
 
   public broadcastElevatorReceivedDestination (elevator: Elevator) : void {
-    const elevatorUpdate: ElevatorUpdate = {
-      type: ElevatorStatus.RECEIVED_DESTINATION,
-      people: elevator.people.map(p => ({
-        name: p.name,
-        personId: p.name
-      })),
-      elevator: {
-        elevatorId: elevator.name,
-        name: elevator.name,
-        direction: elevator.direction
-      },
-      currFloor: elevator.currFloor,
-      destFloor: elevator.destFloor
-    }
-
-    const elevatorReceivedDestinationResponse = {
-      status: OkOrError.Ok,
-      elevatorUpdate
-    }
-
-    this._io.emit('elevator-update', elevatorReceivedDestinationResponse)
+    this._sendElevatorUpdate(elevator)
   }
 
   public broadcastElevatorDoorsClosing (elevator: Elevator) : void {
-    const elevatorUpdate: ElevatorUpdate = {
-      type: ElevatorStatus.DOORS_CLOSING,
-      people: elevator.people.map(p => ({
-        name: p.name,
-        personId: p.name
-      })),
-      elevator: {
-        elevatorId: elevator.name,
-        name: elevator.name,
-        direction: elevator.direction
-      },
-      currFloor: elevator.currFloor,
-      destFloor: elevator.destFloor
-    }
-
-    const elevatorDoorsClosingResponse = {
-      status: OkOrError.Ok,
-      elevatorUpdate
-    }
-
-    this._io.emit('elevator-update', elevatorDoorsClosingResponse)
+    this._sendElevatorUpdate(elevator)
   }
 
   public broadcastElevatorDoorsClosed (elevator: Elevator) : void {
-    const elevatorUpdate: ElevatorUpdate = {
-      type: ElevatorStatus.DOORS_CLOSED,
-      people: elevator.people.map(p => ({
-        name: p.name,
-        personId: p.name
-      })),
-      elevator: {
-        elevatorId: elevator.name,
-        name: elevator.name,
-        direction: elevator.direction
-      },
-      currFloor: elevator.currFloor,
-      destFloor: elevator.destFloor
-    }
-
-    const elevatorDoorsClosedResponse = {
-      status: OkOrError.Ok,
-      elevatorUpdate
-    }
-
-    this._io.emit('elevator-update', elevatorDoorsClosedResponse)
+    this._sendElevatorUpdate(elevator)
   }
 }

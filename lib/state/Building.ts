@@ -5,7 +5,9 @@ export class Building {
   public yearBuilt: number
 
   constructor () {
-    this.name = '1919 Sunset View'
+    //  my idea of a typical apartment building name
+    this.name = 'The Wilshire'
+
     this.numFloors = 10
     this.yearBuilt = 2005
   }

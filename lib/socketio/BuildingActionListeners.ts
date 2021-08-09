@@ -3,7 +3,7 @@
 
 import { Socket } from 'socket.io'
 import { GameLoopManager } from '../gameLoops/GameLoopManager'
-import { ClientCommands, OkOrError, PersonStatus, PersonUpdate } from '../types/ElevatorAppTypes'
+import { ClientCommands, OkOrError } from '../types/ElevatorAppTypes'
 
 import { StateManager } from '../state/StateManager'
 
@@ -32,18 +32,9 @@ export const setClientActionListeners = (socket: Socket, gameLoopManager: GameLo
 
     if (!newPerson) { return }
 
-    const personUpdate: PersonUpdate = {
-      type: PersonStatus.NEWLY_SPAWNED,
-      person: {
-        personId: newPerson.name,
-        name: newPerson.name
-      },
-      currFloor: newPerson.currFloor
-    }
-
     const newPersonSpawnedResponse = {
       status: OkOrError.Ok,
-      personUpdate
+      personUpdate: newPerson.toJS()
     }
 
     callback(newPersonSpawnedResponse)
@@ -51,20 +42,6 @@ export const setClientActionListeners = (socket: Socket, gameLoopManager: GameLo
 
   // socket.on(INCREASE_PEOPLE, (increaseBy, callback) => {
   //   addPeople(increaseBy)
-
-  //   const numPeople = getNumPeople()
-
-  //   const numPeopleUpdatedResponse: StatusUpdateResponse = {
-  //     numPeople,
-  //     status: OkOrError.Ok,
-  //     message: `There are now ${numPeople} in the building`
-  //   }
-
-  //   callback(numPeopleUpdatedResponse)
-  // })
-
-  // socket.on(DECREASE_PEOPLE, (decreaseBy, callback) => {
-  //   removePeople(decreaseBy)
 
   //   const numPeople = getNumPeople()
 
