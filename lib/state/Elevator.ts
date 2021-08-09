@@ -119,6 +119,10 @@ export class Elevator {
     this._destFloor = destFloor
   }
 
+  public releasesPerson (personWhoLeft: Person) : void {
+    this._people = this.people.filter(person => person.name !== personWhoLeft.name)
+  }
+
   public shouldStopAndOpenDoors () : boolean {
     return this._currFloor === this._destFloor && this._status === ElevatorStatus.MOVING_TO_FLOOR
   }

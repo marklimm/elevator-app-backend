@@ -140,4 +140,11 @@ export class StateManager {
 
     return elevator
   }
+
+  public async removeFromPeople (personName: string) : Promise<void> {
+    //  get the people lock
+    await this._lock.acquire(People.PEOPLE_LOCK, async () => {
+      return this._people.removePerson(personName)
+    })
+  }
 }

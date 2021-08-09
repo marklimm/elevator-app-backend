@@ -16,8 +16,7 @@ export const setClientActionListeners = (socket: Socket, gameLoopManager: GameLo
   console.log('socket.id', socket.id)
 
   socket.on(ClientCommands.SPAWN_NEW_PERSON, async (newPersonName, callback) => {
-    console.log('newPersonName', newPersonName)
-
+    //  limit the number of people who are in the "building" at a time
     if (stateManager.numPeople >= 3) {
       const newPersonSpawnedResponse = {
         status: OkOrError.Error,

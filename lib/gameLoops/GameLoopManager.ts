@@ -84,12 +84,21 @@ export class GameLoopManager {
   }
 
   /**
-   * Spawn a new person
+   * Removes the app's awareness of the person since they have reached their destination floor.  The opposite of `spawnNewPerson()`
+   * @param personName
    */
-  public async spawnNewPerson (newPersonName = 'New Person') : Promise<Person | null> {
-    //  limit the number of people who are in the "building" at a time
-    if (this._stateManager.numPeople > 3) { return null }
+  private async removePerson (person: Person) : Promise<void> {
+    await this._stateManager.removeFromPeople(person.name)
 
+    clearInterval(this._intervalsObj[`${person.name}`])
+
+    person.removeFromApp()
+  }
+
+  /**
+   * Spawns a new person
+   */
+  public async spawnNewPerson (newPersonName = 'New Person') : Promise<Person> {
     const newPerson = await this._stateManager.addToPeople(newPersonName)
 
     //  broadcast that a new person has appeared
@@ -100,7 +109,8 @@ export class GameLoopManager {
       person: newPerson,
       stateManager: this._stateManager,
       personBroadcaster: this._broadcasters.personBroadcaster,
-      lock: this._lock
+      lock: this._lock,
+      removePerson: this.removePerson.bind(this)
     }), 2000)
 
     return newPerson

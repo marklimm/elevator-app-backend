@@ -40,4 +40,12 @@ export class PersonBroadcaster {
   public broadcastPersonPressedButton (person: Person) : void {
     this._sendPersonUpdate(person)
   }
+
+  public broadcastPersonLeftElevator (person: Person) : void {
+    this._sendPersonUpdate(person)
+  }
+
+  public broadcastPersonRemovedFromApp (person: Person) : void {
+    this._sendPersonUpdate(person)
+  }
 }

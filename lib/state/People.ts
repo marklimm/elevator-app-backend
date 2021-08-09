@@ -41,10 +41,12 @@ export class People {
 
     const newPerson = new Person(newPersonName, currFloor, destFloor)
 
-    console.log(`${newPerson.name} was just spawned`)
-
     this._people.push(newPerson)
 
     return newPerson
+  }
+
+  public removePerson (personName: string) : void {
+    this._people = this._people.filter(person => person.name !== personName)
   }
 }

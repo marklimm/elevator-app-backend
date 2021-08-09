@@ -31,6 +31,7 @@ export enum PersonStatus {
   PRESSED_BUTTON = 'pressed-button',
   IN_THE_ELEVATOR = 'in-the-elevator',
   LEFT_THE_ELEVATOR = 'left-the-elevator',
+  REMOVED_FROM_APP = 'removed-from-app'
 }
 
 export enum ElevatorStatus {

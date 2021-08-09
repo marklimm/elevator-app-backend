@@ -1,4 +1,4 @@
-import { Direction, PersonStatus, PersonUpdate } from '../types/ElevatorAppTypes'
+import { Direction, ElevatorStatus, PersonStatus, PersonUpdate } from '../types/ElevatorAppTypes'
 import { Elevator } from './Elevator'
 
 export class Person {
@@ -85,11 +85,24 @@ export class Person {
     this._elevator = elevator
   }
 
+  public leavesElevator () : void {
+    this._status = PersonStatus.LEFT_THE_ELEVATOR
+    this._elevator = null
+  }
+
   public pressesButton () : void {
     this._status = PersonStatus.PRESSED_BUTTON
   }
 
+  public removeFromApp () : void {
+    this._status = PersonStatus.REMOVED_FROM_APP
+  }
+
   public requestsElevator () : void {
     this._status = PersonStatus.REQUESTED_ELEVATOR
+  }
+
+  public shouldLeaveElevator () : boolean {
+    return !!this._elevator && this._elevator.status === ElevatorStatus.DOORS_OPEN && this._destFloor === this._elevator.currFloor
   }
 }
