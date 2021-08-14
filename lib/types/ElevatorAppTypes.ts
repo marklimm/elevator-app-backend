@@ -60,12 +60,16 @@ interface CommonFields {
 
 export type PersonUpdate = {
   type: PersonStatus
+  timestamp: number
+
   person: CommonFields
   elevator?: CommonFields
 }
 
 export type ElevatorUpdate = {
   type: ElevatorStatus
+  timestamp: number
+
   elevator: CommonFields
   people?: CommonFields[]
 }

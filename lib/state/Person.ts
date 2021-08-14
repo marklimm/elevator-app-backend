@@ -61,6 +61,8 @@ export class Person {
   public toJS () : PersonUpdate {
     return {
       type: this._status,
+      timestamp: Date.now(),
+
       person: {
         currFloor: this._currFloor,
         destFloor: this._destFloor,

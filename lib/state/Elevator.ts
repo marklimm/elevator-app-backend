@@ -67,6 +67,8 @@ export class Elevator {
   public toJS () : ElevatorUpdate {
     return {
       type: this._status,
+      timestamp: Date.now(),
+
       elevator: {
         currFloor: this.currFloor,
         destFloor: this.destFloor,
