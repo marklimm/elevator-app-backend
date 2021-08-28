@@ -55,6 +55,10 @@ interface CommonFields {
   currFloor: number
   destFloor: number
   direction: Direction
+
+  //  committedDirection only applies to elevators.  It is the direction that the elevator will go once it has received a passenger
+  committedDirection?: Direction
+
   name: string
 }
 

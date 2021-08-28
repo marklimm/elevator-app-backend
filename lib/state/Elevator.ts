@@ -7,9 +7,9 @@ export class Elevator {
   private _destFloor: number
 
   /**
-   * The Direction this elevator will have once it reaches its destination
+   * The Direction this elevator will have (and be committed to --> will not change) once the elevator has picked up its first passenger.  This value can only be changed when the elevator has no passengers and is in READY status
    */
-  private _futureDirection: Direction
+  private _committedDirection: Direction
 
   private _name: string
   private _people: Person[]
@@ -24,7 +24,7 @@ export class Elevator {
     this._people = []
     this._status = ElevatorStatus.READY
 
-    this._futureDirection = Direction.NONE
+    this._committedDirection = Direction.NONE
   }
 
   /**
@@ -42,6 +42,10 @@ export class Elevator {
     if (this._currFloor === this._destFloor) { return Direction.NONE }
 
     return this._currFloor > this._destFloor ? Direction.DOWN : Direction.UP
+  }
+
+  public get committedDirection () : Direction {
+    return this._committedDirection
   }
 
   public get currFloor () : number {
@@ -73,6 +77,7 @@ export class Elevator {
         currFloor: this.currFloor,
         destFloor: this.destFloor,
         direction: this.direction,
+        committedDirection: this.committedDirection,
         name: this.name
       },
 
@@ -98,10 +103,9 @@ export class Elevator {
     this._status = ElevatorStatus.DOORS_OPENING
 
     //  the elevator doesn't know yet which floor the user wants to go to, but the elevator does know which direction they want to go.  Set a max or min value for destFloor which will update the `direction` value.  This tells the "lights on top of the elevator doors" whether to point UP or DOWN
-    this._destFloor = this._futureDirection === Direction.DOWN ? 0 : Number.MAX_SAFE_INTEGER
+    this._destFloor = this._committedDirection === Direction.DOWN ? 0 : Number.MAX_SAFE_INTEGER
 
-    //  clear out futureDirection since we've "copied over" that direction to the elevator
-    this._futureDirection = Direction.NONE
+    //  this._committedDirection is already set from when the elevator was first requested by the user
   }
 
   public doorsOpen () : void {
@@ -114,6 +118,11 @@ export class Elevator {
 
   public movesToFloor () : void {
     this.direction === Direction.UP ? this._currFloor += 1 : this._currFloor -= 1
+  }
+
+  public readyToTakeNewRequest () : void {
+    this._status = ElevatorStatus.READY
+    this._committedDirection = Direction.NONE
   }
 
   public receivedDestination (destFloor = 1) : void {
@@ -137,7 +146,7 @@ export class Elevator {
     //  I feel like there would be more complicated logic if an elevator is stopping mid-way to also answer a new request that is going in the same direction that the elevator is already going
 
     this._destFloor = elevatorRequest.destFloor
-    this._futureDirection = elevatorRequest.direction
+    this._committedDirection = elevatorRequest.direction
     this._status = ElevatorStatus.TOOK_REQUEST
   }
 

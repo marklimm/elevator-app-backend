@@ -13,6 +13,14 @@ export const elevatorLoop = async (elevator: Elevator, elevatorBroadcaster: Elev
   await lock.acquire(elevator.lockName, async () => {
     //  this elevatorLoop now has the specific lock for this elevator
 
+    if (elevator.status === ElevatorStatus.DOORS_OPEN && elevator.people.length === 0) {
+      //  the elevator has dropped off all of its people.  Since there are no people left on the elevator, then the elevator is READY to take more requests!
+
+      elevator.readyToTakeNewRequest()
+
+      elevatorBroadcaster.broadcastElevatorReady(elevator)
+    }
+
     if (elevator.status === ElevatorStatus.DOORS_CLOSED) {
       elevator.startMoving()
 
@@ -66,6 +74,8 @@ export const elevatorLoop = async (elevator: Elevator, elevatorBroadcaster: Elev
       elevator.movesToFloor()
 
       elevatorBroadcaster.broadcastElevatorMoving(elevator)
+
+      return
     }
 
     if (elevator.status === ElevatorStatus.TOOK_REQUEST) {
