@@ -96,8 +96,8 @@ export class Person {
     this._status = PersonStatus.PRESSED_BUTTON
   }
 
-  public removeFromApp () : void {
-    this._status = PersonStatus.REMOVED_FROM_APP
+  public unspawnFromApp () : void {
+    this._status = PersonStatus.UNSPAWNED
   }
 
   public requestsElevator () : void {

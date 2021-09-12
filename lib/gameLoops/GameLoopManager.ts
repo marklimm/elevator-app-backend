@@ -84,15 +84,18 @@ export class GameLoopManager {
   }
 
   /**
-   * Removes the app's awareness of the person since they have reached their destination floor.  The opposite of `spawnNewPerson()`
+   * Unspawn a person since they have reached their destination floor.  The opposite of `spawnNewPerson()`
    * @param personName
    */
-  private async removePerson (person: Person) : Promise<void> {
+  private async unspawnPerson (person: Person) : Promise<void> {
+    //  Note: just because a person is "un-spawned" doesn't mean that the same user with the same name can't "re-spawn" back into the app and have their updates from a second elevator ride appended to the updates from their first elevator ride
+
     await this._stateManager.removeFromPeople(person.name)
 
+    //  clear the individual person's "game loop"
     clearInterval(this._intervalsObj[`${person.name}`])
 
-    person.removeFromApp()
+    person.unspawnFromApp()
   }
 
   /**
@@ -110,7 +113,7 @@ export class GameLoopManager {
       stateManager: this._stateManager,
       personBroadcaster: this._broadcasters.personBroadcaster,
       lock: this._lock,
-      removePerson: this.removePerson.bind(this)
+      unspawnPerson: this.unspawnPerson.bind(this)
     }), 2000)
 
     return newPerson

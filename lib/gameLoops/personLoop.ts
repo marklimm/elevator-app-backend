@@ -10,12 +10,12 @@ interface PersonLoopParams {
   stateManager: StateManager
   personBroadcaster: PersonBroadcaster
   lock: AsyncLock
-  removePerson: (person: Person) => Promise<void>
+  unspawnPerson: (person: Person) => Promise<void>
 }
 
 //  there's the lock for individual persons and individual elevators, and then there's the lock for the array of elevators and the array of people ... I don't know if I've arrived at the most clear solution for expressing how these should be handled
 
-export const personLoop = async ({ person, stateManager, personBroadcaster, lock, removePerson } : PersonLoopParams) : Promise<void> => {
+export const personLoop = async ({ person, stateManager, personBroadcaster, lock, unspawnPerson } : PersonLoopParams) : Promise<void> => {
   await lock.acquire(person.lockName, async () => {
     //  this personLoop now has the specific lock for this person
 
@@ -80,8 +80,8 @@ export const personLoop = async ({ person, stateManager, personBroadcaster, lock
 
       personBroadcaster.broadcastPersonLeftElevator(person)
 
-      //  the person has reached their destination floor --> remove the person from the app
-      await removePerson(person)
+      //  the person has reached their destination floor --> "un-spawn" the person from the app.  Note: this doesn't mean that the user can't "re-spawn" back into the app
+      await unspawnPerson(person)
 
       personBroadcaster.broadcastPersonRemovedFromApp(person)
     }
